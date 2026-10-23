@@ -38,6 +38,16 @@ renderPalette('swatches', wedding.guestPalette);
 renderPalette('swatches-men', wedding.menPalette);
 if ($('swatches').children.length) $('palette-note').textContent = 'Tonos sugeridos, a tu elección.';
 if (!matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) { document.documentElement.classList.add('js-motion'); const observer = new IntersectionObserver(items => items.forEach(item => { if (item.isIntersecting) { item.target.classList.add('visible'); observer.unobserve(item.target); } }), { threshold: .08 }); document.querySelectorAll('.reveal').forEach(el => observer.observe(el)); }
+// Dos tiempos de lectura al entrar en la fotografía, sin un tercer mensaje.
+if (!matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) {
+  const storyObserver = new IntersectionObserver(entries => {
+    if (entries.some(entry => entry.intersectionRatio >= .45)) {
+      $('historia').classList.add('story-started');
+      storyObserver.disconnect();
+    }
+  }, { threshold: .45 });
+  storyObserver.observe($('historia'));
+}
 const film = $('film');
 const intro = $('intro');
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;

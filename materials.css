@@ -208,3 +208,11 @@ footer>.eyebrow{font-family:var(--font-editorial);font-size:14px;letter-spacing:
 .day .venue #maps{font-size:11px}
 
 .dress .dress-exclusions{font-size:15px}
+
+/* La casualidad abre la escena; los diez años llegan después de una pausa. */
+@media(prefers-reduced-motion:no-preference){
+.js-motion .story .story-copy,.js-motion .story .story-end{opacity:0;transform:translateY(10px)}
+.js-motion .story.story-started .story-copy{animation:story-text-arrive .9s ease .15s both}
+.js-motion .story.story-started .story-end{animation:story-text-arrive .9s ease 3.2s both}
+}
+@keyframes story-text-arrive{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
