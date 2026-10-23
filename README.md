@@ -124,3 +124,7 @@ La confirmación usa una sola hoja con textura y encaje para todo el contenido (
 Las cuentas bancarias, preguntas y opciones del RSVP, campos y botones utilizan ahora Bodoni Moda, igual que el texto de lectura. DM Sans se limita a detalles pequeños como etiquetas de escena y notas. Se comprobaron las familias computadas de esos elementos en cuatro tamaños y la conservación exacta de los números bancarios.
 
 La fuente principal final es Bodoni Moda, elegida por el estilo Didona de alto contraste de la referencia de la pareja. Se aplica también a datos bancarios, campos y botones; DM Sans queda para metadatos pequeños. Se retiraron los archivos y declaraciones de la familia anterior para conservar solo esas dos familias. El ampersand de portada usa la cursiva de Bodoni Moda.
+
+## Fuentes específicas de portada
+
+Por indicación de la pareja, la portada combina Bodoni Moda para Claudia & Jorge (con nombres más grandes), Cormorant Garamond para Una historia que continúa, Cinzel para Con amor, los invitamos… y Montserrat de peso 300 (Light) para Descubre nuestra historia. Las cuatro familias se alojan localmente con sus licencias. Esta combinación está limitada a la portada y reemplaza allí la regla anterior de dos familias; las demás escenas conservan sus estilos.
