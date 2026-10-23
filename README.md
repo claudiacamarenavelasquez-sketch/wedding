@@ -82,3 +82,7 @@ La solicitud de lectura está bloqueada por el proxy de red (403 CONNECT); todav
 El código instalable está en `integrations/google-sheets/Code.gs`; instrucciones completas en `integrations/google-sheets/INSTALAR.md`. `api/invitation.js` implementa el puente privado de Vercel. Configurar `RSVP_SCRIPT_URL` y `RSVP_API_KEY` en Vercel y `API_KEY`/`WEDDING_URL` en Apps Script. Estas piezas aún no están instaladas ni verificadas contra la hoja real; el frontend permanece en demo. Las seis pruebas de `node --test tests/rsvp-backend.cjs` verifican el contrato con dobles de Google Sheets y del servicio HTTP, no una escritura en producción.
 
 El bloque de fecha, programa y ubicación tiene espaciado compacto. El video de apertura usa object-fit: cover, altura dinámica del viewport y desenfoque suave; llena la pantalla sin letterboxing, recortando los laterales según la proporción del dispositivo. El archivo original permanece intacto.
+
+## RSVP y encaje fino
+
+Se sustituyó el fondo de papel por una versión con encaje mucho más estrecho y esquinas de plata reducidas. También se estrecharon los bordes de Regalos y cierre. El formulario tiene márgenes propios, sin campo de mensaje ni campo visible para volver a escribir al titular. Un pase no requiere nombres; con dos o más se piden únicamente los acompañantes que asistirán. El payload conserva al titular precargado como primer nombre para mantener el contrato del backend. `node tests/rsvp-form.cjs` valida 12 combinaciones de cupos y tamaños de pantalla con API simulada.
