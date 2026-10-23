@@ -161,3 +161,12 @@ footer>.eyebrow{font-family:var(--font-editorial);font-size:14px;letter-spacing:
 .gift-bank dt,.gift-bank dd{margin:0}
 .gift-bank .gift-holder{margin:16px 0 0}
 @media(max-width:650px){.gift-bank .gift-bank-title,.gift-bank dt,.gift-bank dd,.gift-bank .gift-holder{font-size:14px}.gift-bank dl>div{gap:5px}}
+
+/* Monograma de hilo, sin sello ni fondo; nombres con la misma escala. */
+.cover .monogram.embroidery{width:clamp(205px,24vw,290px);height:clamp(225px,27vw,320px);min-height:0;flex-shrink:0;margin:24px 0 28px;background:none;border:0;box-shadow:none}
+.cover .monogram.embroidery:before,.cover .monogram.embroidery:after{display:none;content:none}
+.cover .monogram.embroidery img{display:block;width:100%;height:100%;max-width:none;max-height:none;object-fit:contain;filter:none;mix-blend-mode:normal;opacity:1}
+.cover .eyebrow:not(.edition){font-size:15px;line-height:1.8;letter-spacing:.11em;max-width:500px}
+.cover h1>span{font-size:1em;line-height:1.04;font-weight:400;letter-spacing:-.055em}
+.cover h1>span:last-child{letter-spacing:.015em}
+@media(max-width:650px){.cover .eyebrow:not(.edition){font-size:12px;letter-spacing:.07em;max-width:310px}.cover .monogram.embroidery{width:220px;height:245px;margin:24px 0 26px}}
