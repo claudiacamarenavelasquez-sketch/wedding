@@ -151,3 +151,13 @@ footer>.eyebrow{font-family:var(--font-editorial);font-size:14px;letter-spacing:
 /* Portada sin llamada adicional; mayor presencia de los nombres. */
 .cover h1{font-size:clamp(62px,7.7vw,106px)}
 @media(max-width:650px){.cover h1{font-size:clamp(46px,12.5vw,65px)}}
+
+/* Datos bancarios en el orden solicitado, con una escala menor y uniforme. */
+.gift-bank{max-width:460px;padding:20px 0}
+.gift-bank .gift-bank-title,.gift-bank dt,.gift-bank dd,.gift-bank .gift-holder{font-family:var(--font-editorial);font-size:16px;line-height:1.5;letter-spacing:0;font-weight:400}
+.gift-bank .gift-bank-title{margin:0 0 10px}
+.gift-bank dl{margin:0}
+.gift-bank dl>div{display:flex;justify-content:center;align-items:baseline;gap:6px;margin:0 0 6px}
+.gift-bank dt,.gift-bank dd{margin:0}
+.gift-bank .gift-holder{margin:16px 0 0}
+@media(max-width:650px){.gift-bank .gift-bank-title,.gift-bank dt,.gift-bank dd,.gift-bank .gift-holder{font-size:14px}.gift-bank dl>div{gap:5px}}
