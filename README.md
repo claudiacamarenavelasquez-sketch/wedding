@@ -116,3 +116,5 @@ Regalos contiene los datos de cuenta facilitados por la pareja. giftRegistryUrl 
 Las paletas de dress code utilizan ahora pinceladas verticales de acuarela con bordes de brocha y transparencia suave. Se conservan los tonos elegidos; las ilustraciones de vestido y traje se muestran con menor contraste, saturación y opacidad para integrarse al papel.
 
 Se corrigió la superposición rectangular del sello retirando los bordes, círculos y filtros que se aplicaban sobre el monograma transparente. La imagen del sello se renderiza completa, con opacidad normal y sin filtros.
+
+El acabado final de dress code usa manchas ovaladas y anchas, con grano y vetas de pincel (assets/acuarela-oval.webp), en lugar de las tiras finas rectangulares. Los figurines recuperan color con opacidad 0.82 y saturación moderada; se mantiene el fondo transparente y el papel como soporte.
