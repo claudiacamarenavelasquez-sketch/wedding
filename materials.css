@@ -195,3 +195,8 @@ footer>.eyebrow{font-family:var(--font-editorial);font-size:14px;letter-spacing:
 
 /* Texto de invitación del dress code a la escala solicitada. */
 .dress .dress-invitation{font-size:15px;line-height:1.5}
+
+/* Nombre del lugar inmediatamente después de la fecha. */
+.day .day-location{margin:14px auto 22px;text-align:center}
+.day .day-location h3{font-size:15px;line-height:1.4;letter-spacing:.12em;margin:0 0 7px}
+.day .day-location .venue-full-name{font-size:11px;line-height:1.6;margin:0}
