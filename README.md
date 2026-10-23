@@ -39,3 +39,7 @@ Importar el repositorio, elegir preset **Other**, sin comando de build ni instal
 ## Validación
 
 `node --check app.js` y prueba de navegador documentada en `tests/browser.cjs`. La prueba usa Playwright y Chromium del entorno, sin añadir dependencias a la aplicación. Ejecutar con el servidor en puerto 3000: `node tests/browser.cjs`. Comprueba recursos, intro, demo, cupos, rechazo de parámetros públicos y ausencia de desbordamiento en móvil/tableta/escritorio.
+
+## Actualización de dirección de arte
+
+Se retiró el rótulo vertical de portada. La capilla se acompaña de un marco doble de papelería, separadores e iconos lineales para el programa. `assets/anturio-editorial.png` es una naturaleza muerta decorativa generada para esta invitación; no representa el lugar ni a los novios. Se usa en Regalos y Lugares reservados para aportar profundidad visual con la paleta burgundy.
