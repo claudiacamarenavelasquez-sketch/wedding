@@ -39,28 +39,38 @@ renderPalette('swatches-men', wedding.menPalette);
 if ($('swatches').children.length) $('palette-note').textContent = 'Tonos sugeridos, a tu elección.';
 if (!matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) { document.documentElement.classList.add('js-motion'); const observer = new IntersectionObserver(items => items.forEach(item => { if (item.isIntersecting) { item.target.classList.add('visible'); observer.unobserve(item.target); } }), { threshold: .08 }); document.querySelectorAll('.reveal').forEach(el => observer.observe(el)); }
 const film = $('film');
-const filmBackdrop = $('film-backdrop');
-let introTimeout;
-function closeIntro() { clearTimeout(introTimeout); film.pause(); filmBackdrop.pause(); $('intro').hidden = true; document.body.style.overflow = ''; }
-$('intro-advance').onclick = () => { closeIntro(); $('portada').scrollIntoView({ behavior: 'instant' }); };
-film.onplay = () => { filmBackdrop.currentTime = film.currentTime; filmBackdrop.play().catch(() => {}); };
-film.ontimeupdate = () => { if (Math.abs(filmBackdrop.currentTime - film.currentTime) > .3) filmBackdrop.currentTime = film.currentTime; };
-film.onpause = () => filmBackdrop.pause();
-film.onended = closeIntro;
-film.onerror = closeIntro;
-// Sin controles: reproducción automática silenciada. Si no puede reproducirse,
-// se muestra la invitación; nunca se deja una pantalla bloqueada.
-if (wedding.assets.video && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+const intro = $('intro');
+const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+let advancedFromFilm = false;
+function advanceFromFilm() {
+  advancedFromFilm = true;
+  $('portada').scrollIntoView({ behavior: 'instant' });
+}
+$('intro-advance').onclick = advanceFromFilm;
+if (wedding.assets.video) {
   film.muted = true;
-  filmBackdrop.muted = true;
-  filmBackdrop.src = wedding.assets.video;
-  filmBackdrop.poster = 'assets/hero.jpg';
   film.src = wedding.assets.video;
   film.poster = 'assets/hero.jpg';
-  $('intro').hidden = false;
-  document.body.style.overflow = 'hidden';
-  introTimeout = setTimeout(closeIntro, 15000);
-  film.play().catch(closeIntro);
+  intro.hidden = false;
+  film.autoplay = !reducedMotion;
+  film.onended = () => {
+    const bounds = intro.getBoundingClientRect();
+    if (!advancedFromFilm && bounds.top > -innerHeight / 2 && bounds.bottom > innerHeight / 2) {
+      advanceFromFilm();
+    }
+  };
+  // La película permanece en la página y vuelve a reproducirse al regresar.
+  if (!reducedMotion) {
+    const playback = new IntersectionObserver(entries => {
+      for (const entry of entries) {
+        if (entry.isIntersecting && entry.intersectionRatio >= .5) {
+          if (film.ended) film.currentTime = 0;
+          film.play().catch(() => {});
+        } else film.pause();
+      }
+    }, { threshold: [0, .5] });
+    playback.observe(intro);
+  }
 }
 let invitation;
 // Fragment tokens avoid sending invitation identifiers to static hosting logs.
