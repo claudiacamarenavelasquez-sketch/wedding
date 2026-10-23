@@ -94,3 +94,5 @@ El endpoint Apps Script respondió `{ok:true, service:"wedding-rsvp", version:1}
 ## Adaptación a la lista existente
 
 Apps Script versión 2 reconoce la pestaña original gid 1294208008 con Invitados en B y Pases en C. Conserva A:C y agrega D:J para identificador, hash, enlace y confirmaciones en la misma fila. Las pruebas locales cubren conservación de datos, generación de enlaces, revocación y guardado en esta estructura. Debe instalarse, ejecutarse prepararRSVP y publicarse como nueva versión para aplicarse a la hoja real.
+
+Apps Script versión 3 agrega `generarEnlacesFaltantes`, ejecutable sin selección activa. Detecta una única lista por Invitados/Pases, conserva todos los enlaces existentes y omite filas inválidas. Once pruebas locales cubren esta operación repetible y las reglas del backend. Requiere pegar el script actualizado en Google y publicar una nueva versión.

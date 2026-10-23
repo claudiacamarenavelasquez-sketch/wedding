@@ -14,6 +14,7 @@ const RESPONSE_HEADERS = ['ID', 'Asiste', 'Cantidad', 'Nombres', 'Mensaje', 'Act
 function onOpen() {
   SpreadsheetApp.getUi().createMenu('Invitaciones')
     .addItem('Preparar hojas RSVP', 'prepararRSVP')
+    .addItem('Generar enlaces faltantes para toda la lista', 'generarEnlacesFaltantes')
     .addItem('Generar o renovar enlace de la fila seleccionada', 'generarEnlaceSeleccionado')
     .addToUi();
 }
@@ -27,7 +28,13 @@ function prepararRSVP() {
 
 // Reconoce la lista original: A se conserva, B=Invitados, C=Pases.
 function guestLayout_(book, prepare) {
-  const original = typeof book.getSheets === 'function' ? book.getSheets().find(sheet => sheet.getSheetId() === SOURCE_GID) : null;
+  const sheets = typeof book.getSheets === 'function' ? book.getSheets() : [];
+  const candidates = sheets.filter(sheet => {
+    const values = sheet.getRange(1, 2, 1, 2).getValues()[0];
+    return String(values[0]).trim() === 'Invitados' && String(values[1]).trim() === 'Pases';
+  });
+  if (candidates.length > 1) throw new Error('Hay más de una pestaña con Invitados y Pases. Conserva esos encabezados solo en la lista que usará el RSVP.');
+  const original = candidates.length === 1 ? candidates[0] : sheets.find(sheet => sheet.getSheetId() === SOURCE_GID);
   if (original) {
     const header = original.getRange(1, 2, 1, 2).getValues()[0];
     if (String(header[0]).trim() === 'Invitados' && String(header[1]).trim() === 'Pases') {
@@ -77,36 +84,80 @@ function checkHeaders_(sheet, headers) {
   }
 }
 
-function generarEnlaceSeleccionado() {
-  const props = PropertiesService.getScriptProperties();
-  const website = (props.getProperty('WEDDING_URL') || '').replace(/\/$/, '');
+function weddingUrl_() {
+  const website = (PropertiesService.getScriptProperties().getProperty('WEDDING_URL') || '').trim().replace(/\/$/, '');
   if (!/^https:\/\/[^\s#?]+$/.test(website)) throw new Error('Configura WEDDING_URL con la URL HTTPS de la invitación, sin parámetros ni fragmentos.');
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  return website;
+}
+
+function validGuest_(values) {
+  return values && String(values[1]).trim() !== '' && Number.isInteger(values[2]) && values[2] >= 1 && values[2] <= 100;
+}
+
+function writeGuestLink_(layout, row, allGuests, website) {
+  const values = allGuests[row - 2];
+  if (!validGuest_(values)) throw new Error('La fila ' + row + ' necesita nombre y pases enteros entre 1 y 100.');
+  const id = values[0] ? String(values[0]) : Utilities.getUuid();
+  if (allGuests.some((guest, index) => index + 2 !== row && String(guest[0]) === id)) throw new Error('ID duplicado en la fila ' + row + '. No se cambió ese enlace.');
+  const token = hash_(Utilities.getUuid() + Utilities.getUuid());
+  layout.sheet.getRange(row, layout.idColumn).setValue(id);
+  layout.sheet.getRange(row, layout.tokenColumn, 1, 2).setValues([[hash_(token), website + '/#invite=' + token]]);
+  values[0] = id;
+}
+
+function generarEnlaceSeleccionado() {
+  const website = weddingUrl_();
+  // Leer la selección del documento abierto ANTES de abrir la hoja por ID.
+  const active = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = active && active.getActiveSheet();
+  const range = sheet && sheet.getActiveRange();
   const layout = guestLayout_(SpreadsheetApp.openById(SHEET_ID), false);
-  if (sheet.getSheetId() !== layout.sheet.getSheetId() || sheet.getActiveRange().getRow() < 2 || sheet.getActiveRange().getNumRows() !== 1) {
-    throw new Error('Selecciona una sola fila de tu lista de invitados, debajo de los encabezados.');
+  if (!range || sheet.getSheetId() !== layout.sheet.getSheetId() || range.getRow() < 2 || range.getNumRows() !== 1) {
+    throw new Error('La selección no corresponde a una fila de ' + layout.sheet.getName() + '. Ejecuta generarEnlacesFaltantes para crear los enlaces sin seleccionar una celda.');
   }
   const lock = LockService.getScriptLock();
   lock.waitLock(20000);
   try {
-    const row = sheet.getActiveRange().getRow();
-    const allGuests = guestRows_(layout);
-    const values = allGuests[row - 2];
-    if (!values) throw new Error('Selecciona una fila con datos.');
-    if (!String(values[1]).trim() || !Number.isInteger(values[2]) || values[2] < 1 || values[2] > 100) throw new Error('Completa Titular y Cupos (entero entre 1 y 100).');
-    const id = values[0] ? String(values[0]) : Utilities.getUuid();
-    const existing = allGuests.map(guest => [guest[0]]);
-    if (existing.some((entry, index) => index + 2 !== row && String(entry[0]) === id)) throw new Error('El ID está duplicado. Cada familia debe tener uno distinto.');
-    const token = hash_(Utilities.getUuid() + Utilities.getUuid());
-    sheet.getRange(row, layout.idColumn).setValue(id);
-    sheet.getRange(row, layout.tokenColumn, 1, 2).setValues([[hash_(token), website + '/#invite=' + token]]);
+    writeGuestLink_(layout, range.getRow(), guestRows_(layout), website);
     SpreadsheetApp.flush();
-    SpreadsheetApp.getActiveSpreadsheet().toast('Enlace creado en la columna Enlace. Si había uno anterior, dejó de funcionar.');
+    active.toast('Enlace creado. Si había uno anterior para esta fila, dejó de funcionar.');
+  } finally { lock.releaseLock(); }
+}
+
+// Se puede ejecutar directamente desde Apps Script: no depende de la selección.
+// Conserva todos los enlaces existentes, incluso si se ejecuta varias veces.
+function generarEnlacesFaltantes() {
+  const website = weddingUrl_();
+  const lock = LockService.getScriptLock();
+  lock.waitLock(20000);
+  try {
+    const book = SpreadsheetApp.openById(SHEET_ID);
+    const layout = guestLayout_(book, false);
+    const rows = guestRows_(layout);
+    const seen = new Set();
+    rows.forEach(guest => {
+      const id = String(guest[0]);
+      if (id && seen.has(id)) throw new Error('Hay IDs duplicados. No se generó ningún enlace.');
+      if (id) seen.add(id);
+    });
+    let created = 0, kept = 0;
+    const invalidRows = [];
+    rows.forEach((guest, index) => {
+      if (!String(guest[1]).trim() && guest[2] === '') return;
+      if (!validGuest_(guest)) { invalidRows.push(index + 2); return; }
+      // Nunca reemplazar silenciosamente tokens o enlaces ya enviados.
+      if (guest[3] || guest[4]) { kept++; return; }
+      writeGuestLink_(layout, index + 2, rows, website);
+      created++;
+    });
+    SpreadsheetApp.flush();
+    book.toast('Enlaces creados: ' + created + '. Existentes conservados: ' + kept + (invalidRows.length ? '. Revisa nombre/pases en filas: ' + invalidRows.join(', ') : '.'));
+    return { created: created, kept: kept, invalidRows: invalidRows };
   } finally { lock.releaseLock(); }
 }
 
 // Comprobación pública sin datos de invitados.
-function doGet() { return json_({ ok: true, service: 'wedding-rsvp', version: 2 }); }
+function doGet() { return json_({ ok: true, service: 'wedding-rsvp', version: 3 }); }
 
 function doPost(event) {
   const lock = LockService.getScriptLock();
