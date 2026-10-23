@@ -9,7 +9,7 @@ En la hoja de la boda abre **Extensiones → Apps Script**. Guarda una copia de 
 En **Configuración del proyecto → Propiedades del script**, agrega:
 
 - `API_KEY`: una clave aleatoria privada de al menos 32 caracteres (idealmente 64). Puedes generarla en tu computadora con `openssl rand -hex 32`. No la pegues en el chat ni en config.js.
-- `WEDDING_URL`: la dirección HTTPS de la invitación definitiva, sin `#` ni parámetros. Usa la web de la invitación, no la del Save the Date.
+- El dominio ya está fijado en `weddingUrl_()` como `https://claudiayjorge.vercel.app`. No hace falta la propiedad WEDDING_URL. Una propiedad antigua con ese nombre no se utiliza.
 
 La misma API_KEY se configurará solo en Vercel.
 

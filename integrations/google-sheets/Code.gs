@@ -85,9 +85,8 @@ function checkHeaders_(sheet, headers) {
 }
 
 function weddingUrl_() {
-  const website = (PropertiesService.getScriptProperties().getProperty('WEDDING_URL') || '').trim().replace(/\/$/, '');
-  if (!/^https:\/\/[^\s#?]+$/.test(website)) throw new Error('Configura WEDDING_URL con la URL HTTPS de la invitación, sin parámetros ni fragmentos.');
-  return website;
+  // Dominio definitivo indicado por la pareja. No requiere WEDDING_URL.
+  return 'https://claudiayjorge.vercel.app';
 }
 
 function validGuest_(values) {
