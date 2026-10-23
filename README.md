@@ -61,3 +61,11 @@ La referencia de materiales se traduce en pequeños bordes de encaje vectorial e
 ## Materialidad revisada
 
 materials.css unifica portada, dress code y RSVP con papel de algodón, encaje y esquinas de plata mediante recursos decorativos generados, optimizados a WebP. Las muestras de la paleta usan pinceladas con textura, conservando los seis tonos de config.js. Regalos utiliza una hoja marfil sobre burgundy, encaje en el borde superior y el anturio pequeño inferior. Los márgenes evitan que la decoración interfiera con el texto.
+
+## Hoja de RSVP elegida por la pareja
+
+- Documento: https://docs.google.com/spreadsheets/d/1xup8YEIi4OSnbCZizovOZj587_md5l0pjYDMb48INtk/edit
+- Pestaña indicada: `RSVP`, gid `1294208008`.
+- Su estructura aún no se ha podido inspeccionar: el acceso a Google Sheets está bloqueado por la red del entorno y no se ha verificado autorización para escribir.
+- Mantener este documento privado. El formulario no debe redirigir a la lista ni descargarla en el navegador. La conexión debe realizarse desde el backend, validando los cupos guardados por invitación.
+- Se requiere una exportación de la pestaña o sus encabezados para definir el mapeo, y configurar autorización privada del backend antes de activar el modo real. El enlace de edición por sí solo no habilita escrituras. No se ha enviado ninguna confirmación a esta hoja.
