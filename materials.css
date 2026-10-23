@@ -170,3 +170,25 @@ footer>.eyebrow{font-family:var(--font-editorial);font-size:14px;letter-spacing:
 .cover h1>span{font-size:1em;line-height:1.04;font-weight:400;letter-spacing:-.055em}
 .cover h1>span:last-child{letter-spacing:.015em}
 @media(max-width:650px){.cover .eyebrow:not(.edition){font-size:12px;letter-spacing:.07em;max-width:310px}.cover .monogram.embroidery{width:220px;height:245px;margin:24px 0 26px}}
+
+/* Confirmación como una nota personal, con controles de trazo ligero. */
+.rsvp-paper{grid-template-columns:minmax(0,1fr);gap:26px;max-width:850px;padding:75px 12% 90px 14%}
+.rsvp-heading{text-align:center}
+.rsvp-heading>h2{font-size:clamp(28px,3.3vw,40px);margin:0 0 26px}
+.reserved-details{max-width:none;border:0;padding:0;margin:0}
+.reserved-details #guest-name{font-size:23px;margin:0 0 24px;line-height:1.4}
+.reserved-intro{font-size:18px;margin:0 0 8px}
+.reserved-details .seats{justify-content:center;gap:8px;margin:0}
+.reserved-details .seats span:first-child{font-size:27px;line-height:1.3}
+.reserved-details .seats span:last-child{font-family:var(--font-editorial);font-size:21px;letter-spacing:0;text-transform:none}
+.rsvp .rsvp-paper form{padding:0;width:100%;max-width:430px;margin:0 auto}
+.rsvp .rsvp-paper legend{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.rsvp .rsvp-paper fieldset{border:0;padding:0;margin:0 0 18px}
+.rsvp .rsvp-paper .radio{font-size:19px;padding:10px 0;margin:0;gap:12px}
+.rsvp .rsvp-paper input[type=radio]{appearance:none;width:15px;height:15px;border:1px solid #947c75;border-radius:50%;background:transparent;flex-shrink:0}
+.rsvp .rsvp-paper input[type=radio]:checked{background:var(--wine);box-shadow:inset 0 0 0 3px #f4ede3}
+.rsvp .rsvp-paper #attendee-fields{margin:18px 0 25px}
+.rsvp .rsvp-paper #attendee-fields label{font-size:16px;margin-bottom:16px}
+.rsvp .rsvp-paper input:not([type=radio]),.rsvp .rsvp-paper select{background:transparent;border:0;border-bottom:1px solid #b7aca8;border-radius:0;padding:8px 0;font-size:18px}
+.rsvp .rsvp-paper #submit-rsvp{font-size:14px;margin-top:12px;padding:13px 18px}
+@media(max-width:650px){.rsvp-paper{padding:65px 28px 75px 42px;gap:24px}.rsvp-heading>h2{font-size:29px;margin-bottom:24px}.reserved-details #guest-name{font-size:21px;margin-bottom:22px}.reserved-details .seats span:first-child{font-size:25px}.reserved-details .seats span:last-child{font-size:20px}.rsvp .rsvp-paper .radio{font-size:17px;line-height:1.4}.rsvp .rsvp-paper #submit-rsvp{font-size:13px}}
