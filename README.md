@@ -103,7 +103,7 @@ Ejecutar crearBaseRSVP en el proyecto Apps Script existente crea un nuevo archiv
 
 ## Tipografía y sello de portada
 
-Dos familias locales: Cormorant Garamond para el texto editorial y DM Sans para etiquetas, campos y botones. Los archivos WOFF2 y sus licencias están en assets/fonts. Solo la portada lleva una versión del monograma en un sello de relieve con transparencia; el resto de escenas no incluye monogramas. La portada no muestra fecha ni ubicación. La portada utiliza assets/sello-relieve.webp, derivado de la propuesta de sello compacto. El relieve está integrado en la imagen; no se aplican círculos ni filtros de relieve CSS.
+Dos familias locales: Bodoni Moda para el texto editorial y DM Sans para etiquetas, campos y botones. Los archivos WOFF2 y sus licencias están en assets/fonts. Solo la portada lleva una versión del monograma en un sello de relieve con transparencia; el resto de escenas no incluye monogramas. La portada no muestra fecha ni ubicación. La portada utiliza assets/sello-relieve.webp, derivado de la propuesta de sello compacto. El relieve está integrado en la imagen; no se aplican círculos ni filtros de relieve CSS.
 
 La capilla se amplió y se preparó una versión con transparencia a partir de la acuarela original. El programa usa texto más pequeño y la ceremonia religiosa comienza a las 3:30 p. m.; civil 5:00 p. m. y fiesta 6:00 p. m. tests/design-scenes.cjs verifica tipografías, único sello, portada, capilla, horarios y video completo con avance al tocar.
 
@@ -119,6 +119,8 @@ Se corrigió la superposición rectangular del sello retirando los bordes, círc
 
 El acabado final de dress code usa manchas ovaladas y anchas, con grano y vetas de pincel (assets/acuarela-oval.webp), en lugar de las tiras finas rectangulares. Los figurines recuperan color con opacidad 0.82 y saturación moderada; se mantiene el fondo transparente y el papel como soporte.
 
-La confirmación usa una sola hoja con textura y encaje para todo el contenido (rsvp-paper), sin otra tarjeta dentro del formulario. El botón de confirmación es redondeado como el de ubicación. Se verificaron las familias computadas en el navegador: únicamente Cormorant Garamond y DM Sans. Se simplificó la jerarquía y se retiraron cursivas de títulos y textos principales para evitar una apariencia de múltiples estilos.
+La confirmación usa una sola hoja con textura y encaje para todo el contenido (rsvp-paper), sin otra tarjeta dentro del formulario. El botón de confirmación es redondeado como el de ubicación. Se verificaron las familias computadas en el navegador: únicamente Bodoni Moda y DM Sans. Se simplificó la jerarquía y se retiraron cursivas de títulos y textos principales para evitar una apariencia de múltiples estilos.
 
-Las cuentas bancarias, preguntas y opciones del RSVP, campos y botones utilizan ahora Cormorant Garamond, igual que el texto de lectura. DM Sans se limita a detalles pequeños como etiquetas de escena y notas. Se comprobaron las familias computadas de esos elementos en cuatro tamaños y la conservación exacta de los números bancarios.
+Las cuentas bancarias, preguntas y opciones del RSVP, campos y botones utilizan ahora Bodoni Moda, igual que el texto de lectura. DM Sans se limita a detalles pequeños como etiquetas de escena y notas. Se comprobaron las familias computadas de esos elementos en cuatro tamaños y la conservación exacta de los números bancarios.
+
+La fuente principal final es Bodoni Moda, elegida por el estilo Didona de alto contraste de la referencia de la pareja. Se aplica también a datos bancarios, campos y botones; DM Sans queda para metadatos pequeños. Se retiraron los archivos y declaraciones de la familia anterior para conservar solo esas dos familias. El ampersand de portada usa la cursiva de Bodoni Moda.
