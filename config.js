@@ -18,7 +18,8 @@ export const wedding = {
   menPalette: [
     { name: 'Negro', hex: '#191716' },
     { name: 'Gris', hex: '#747675' },
-    { name: 'Azul marino', hex: '#26354c' }
+    { name: 'Azul grisáceo', hex: '#26354c' },
+    { name: 'Azul marino', hex: '#101e3c' }
   ],
   // auto: enlace privado => backend; enlace general => demostración explícita.
   rsvp: { mode: 'auto', endpoint: '/api/invitation', demo: { name: 'Familia de ejemplo', seats: 2 } }
