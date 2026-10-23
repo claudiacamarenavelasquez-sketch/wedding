@@ -96,3 +96,7 @@ El endpoint Apps Script respondió `{ok:true, service:"wedding-rsvp", version:1}
 Apps Script versión 2 reconoce la pestaña original gid 1294208008 con Invitados en B y Pases en C. Conserva A:C y agrega D:J para identificador, hash, enlace y confirmaciones en la misma fila. Las pruebas locales cubren conservación de datos, generación de enlaces, revocación y guardado en esta estructura. Debe instalarse, ejecutarse prepararRSVP y publicarse como nueva versión para aplicarse a la hoja real.
 
 Apps Script versión 3 agrega `generarEnlacesFaltantes`, ejecutable sin selección activa. Detecta una única lista por Invitados/Pases, conserva todos los enlaces existentes y omite filas inválidas. Once pruebas locales cubren esta operación repetible y las reglas del backend. Requiere pegar el script actualizado en Google y publicar una nueva versión.
+
+## Creación automática de una base separada
+
+Ejecutar crearBaseRSVP en el proyecto Apps Script existente crea un nuevo archivo de Drive, importa nombres y pases de B/C sin alterar el original, prepara Invitados y RSVP y genera enlaces en E de Invitados. Guarda RSVP_SPREADSHEET_ID en las propiedades para que el backend use ese archivo. Si ya existe, lo reutiliza. Requiere publicar la nueva versión del mismo Apps Script para aplicar la selección de base al endpoint. Las 14 pruebas locales verifican creación, conservación del original, idempotencia y escritura simulada en la nueva base.

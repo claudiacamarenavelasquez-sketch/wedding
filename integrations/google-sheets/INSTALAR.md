@@ -1,5 +1,17 @@
 # Conectar el RSVP con Google Sheets
 
+## Opción recomendada: crear una base nueva automáticamente
+
+1. Pega el Code.gs actualizado en el mismo proyecto Apps Script que ya tiene tu API_KEY y tu implementación /exec. Guarda.
+2. En el selector de funciones elige **crearBaseRSVP** y pulsa **Ejecutar**. Acepta los permisos de creación de hojas si Google los solicita.
+3. Abre **Registro de ejecución**. La línea **BASE CREADA** contiene el enlace al nuevo archivo **Claudia y Jorge · Base RSVP**. No es una pestaña nueva de la lista original, es otro archivo en tu Drive.
+4. En el archivo nuevo, **Invitados** tiene las columnas ID, Titular, Cupos, TokenHash y **Enlace (E)**; **RSVP** recibirá las respuestas. Los nombres y pases se copian de B/C de la lista original. Si hay filas inválidas se indican por número, sin alterarlas.
+5. La función guarda automáticamente **RSVP_SPREADSHEET_ID** en las propiedades del mismo proyecto; el backend usa la nueva base. No hace falta editar ningún ID ni cambiar la clave de Vercel.
+6. Publica **Implementar → Administrar implementaciones → Editar → Nueva versión** conservando la misma URL /exec. Prueba un enlace de la columna E del archivo nuevo.
+
+Ejecutarla otra vez reutiliza la base creada y conserva sus enlaces. Para agregar invitados más adelante, hazlo en Invitados de la base nueva y ejecuta generarEnlacesFaltantes desde este mismo proyecto Apps Script. No abras un proyecto Apps Script vacío en el archivo nuevo: continúa usando el proyecto existente, donde está tu clave.
+
+
 ## 1. Pegar el script
 
 En la hoja de la boda abre **Extensiones → Apps Script**. Guarda una copia de tu código anterior y reemplaza `Code.gs` por el archivo de esta carpeta. Usa el motor V8.

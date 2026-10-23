@@ -1,6 +1,6 @@
 /** Claudia & Jorge · Backend de RSVP para Google Apps Script V8.
  * Pegar en Apps Script asociado a la hoja y ejecutar prepararRSVP una vez.
- * API_KEY y WEDDING_URL se configuran en Propiedades del script.
+ * API_KEY se configura en Propiedades del script; el dominio ya está definido.
  * El navegador llama a Vercel; solo Vercel llama a este servicio con API_KEY.
  */
 const SHEET_ID = '1xup8YEIi4OSnbCZizovOZj587_md5l0pjYDMb48INtk';
@@ -13,14 +13,82 @@ const RESPONSE_HEADERS = ['ID', 'Asiste', 'Cantidad', 'Nombres', 'Mensaje', 'Act
 
 function onOpen() {
   SpreadsheetApp.getUi().createMenu('Invitaciones')
+    .addItem('Crear base nueva con los invitados actuales', 'crearBaseRSVP')
+    .addItem('Preparar y generar todos los enlaces', 'iniciarRSVP')
     .addItem('Preparar hojas RSVP', 'prepararRSVP')
     .addItem('Generar enlaces faltantes para toda la lista', 'generarEnlacesFaltantes')
     .addItem('Generar o renovar enlace de la fila seleccionada', 'generarEnlaceSeleccionado')
     .addToUi();
 }
 
+function rsvpBook_() {
+  const id = PropertiesService.getScriptProperties().getProperty('RSVP_SPREADSHEET_ID');
+  return SpreadsheetApp.openById(id || SHEET_ID);
+}
+
+/** Ejecutar una sola función para crear la base completa sin tocar el original.
+ * Guarda el ID nuevo en las propiedades privadas del mismo proyecto.
+ * Si se repite, reutiliza la base ya creada y conserva sus enlaces.
+ */
+function crearBaseRSVP() {
+  const props = PropertiesService.getScriptProperties();
+  if (props.getProperty('RSVP_SPREADSHEET_ID')) {
+    const summary = iniciarRSVP();
+    console.log('Se reutilizó la base existente. No se creó otro archivo.');
+    return summary;
+  }
+  const source = SpreadsheetApp.openById(SHEET_ID);
+  const candidates = source.getSheets().filter(sheet => {
+    const header = sheet.getRange(1, 2, 1, 2).getValues()[0];
+    return String(header[0]).trim() === 'Invitados' && String(header[1]).trim() === 'Pases';
+  });
+  if (candidates.length !== 1) throw new Error('Debe existir una sola pestaña original con Invitados en B1 y Pases en C1. No se creó ningún archivo.');
+  const sheet = candidates[0];
+  const sourceRows = sheet.getLastRow() > 1 ? sheet.getRange(2, 2, sheet.getLastRow() - 1, 2).getValues() : [];
+  const imported = [], invalidRows = [];
+  sourceRows.forEach((row, index) => {
+    const name = String(row[0]).trim();
+    if (!name && row[1] === '') return;
+    const seats = typeof row[1] === 'number' ? row[1] : (/^\d+$/.test(String(row[1]).trim()) ? Number(row[1]) : NaN);
+    if (!name || !Number.isInteger(seats) || seats < 1 || seats > 100) { invalidRows.push(index + 2); return; }
+    imported.push(['', text_(name), seats, '', '']);
+  });
+  if (!imported.length) throw new Error('No se encontraron invitados con pases válidos. No se creó ningún archivo.');
+  const book = SpreadsheetApp.create('Claudia y Jorge · Base RSVP');
+  book.getSheets()[0].setName(GUEST_TAB);
+  const guests = ensureSheet_(book, GUEST_TAB, GUEST_HEADERS);
+  ensureSheet_(book, RESPONSE_TAB, RESPONSE_HEADERS);
+  guests.getRange(2, 1, imported.length, GUEST_HEADERS.length).setValues(imported);
+  SpreadsheetApp.flush();
+  props.setProperty('RSVP_SPREADSHEET_ID', book.getId());
+  const summary = iniciarRSVP();
+  summary.importados = imported.length;
+  summary.filasOriginalesPorRevisar = invalidRows;
+  console.log('BASE CREADA: https://docs.google.com/spreadsheets/d/' + book.getId() + '/edit');
+  console.log(JSON.stringify(summary));
+  return summary;
+}
+
+// Ejecutar esta única función si todavía no aparecen columnas ni enlaces.
+function iniciarRSVP() {
+  prepararRSVP();
+  const result = generarEnlacesFaltantes();
+  const book = rsvpBook_();
+  const layout = guestLayout_(book, false);
+  const summary = {
+    pestana: layout.sheet.getName(),
+    creados: result.created,
+    conservados: result.kept,
+    filasPorRevisar: result.invalidRows,
+    abrirPestana: 'https://docs.google.com/spreadsheets/d/' + (typeof book.getId === 'function' ? book.getId() : SHEET_ID) + '/edit#gid=' + layout.sheet.getSheetId()
+  };
+  console.log(JSON.stringify(summary));
+  book.toast('Proceso terminado. Abre el Registro de ejecución para ver la pestaña y el resultado.');
+  return summary;
+}
+
 function prepararRSVP() {
-  const book = SpreadsheetApp.openById(SHEET_ID);
+  const book = rsvpBook_();
   const layout = guestLayout_(book, true);
   if (!layout.existing) ensureSheet_(book, RESPONSE_TAB, RESPONSE_HEADERS);
   book.toast(layout.existing ? 'Lista conservada. Columnas D a J listas: ID, TokenHash, Enlace y confirmaciones.' : 'Hojas preparadas. Agrega Titular y Cupos en Invitados.');
@@ -110,7 +178,7 @@ function generarEnlaceSeleccionado() {
   const active = SpreadsheetApp.getActiveSpreadsheet();
   const sheet = active && active.getActiveSheet();
   const range = sheet && sheet.getActiveRange();
-  const layout = guestLayout_(SpreadsheetApp.openById(SHEET_ID), false);
+  const layout = guestLayout_(rsvpBook_(), false);
   if (!range || sheet.getSheetId() !== layout.sheet.getSheetId() || range.getRow() < 2 || range.getNumRows() !== 1) {
     throw new Error('La selección no corresponde a una fila de ' + layout.sheet.getName() + '. Ejecuta generarEnlacesFaltantes para crear los enlaces sin seleccionar una celda.');
   }
@@ -130,7 +198,7 @@ function generarEnlacesFaltantes() {
   const lock = LockService.getScriptLock();
   lock.waitLock(20000);
   try {
-    const book = SpreadsheetApp.openById(SHEET_ID);
+    const book = rsvpBook_();
     const layout = guestLayout_(book, false);
     const rows = guestRows_(layout);
     const seen = new Set();
@@ -156,7 +224,7 @@ function generarEnlacesFaltantes() {
 }
 
 // Comprobación pública sin datos de invitados.
-function doGet() { return json_({ ok: true, service: 'wedding-rsvp', version: 3 }); }
+function doGet() { return json_({ ok: true, service: 'wedding-rsvp', version: 4 }); }
 
 function doPost(event) {
   const lock = LockService.getScriptLock();
@@ -172,7 +240,7 @@ function doPost(event) {
     if (Object.keys(request).some(k => !['apiKey', 'action', 'token', 'response'].includes(k))) return failure_('INVALID_REQUEST');
     locked = lock.tryLock(20000);
     if (!locked) return failure_('BUSY');
-    const book = SpreadsheetApp.openById(SHEET_ID);
+    const book = rsvpBook_();
     const layout = guestLayout_(book, false);
     const guests = layout.sheet;
     const responses = layout.existing ? guests : book.getSheetByName(RESPONSE_TAB);
