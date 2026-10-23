@@ -76,3 +76,7 @@ Endpoint de implementación recibido de la pareja:
 `https://script.google.com/macros/s/AKfycbxI9qiR24_O1ng66gGS9KZdwCNToXEmLvMevIPPmJPL58Y4ObWG6vx_uS-1hENuZvM/exec`
 
 La solicitud de lectura está bloqueada por el proxy de red (403 CONNECT); todavía no se conoce el contrato de entrada/salida ni se ha probado una escritura. Antes de conectar el formulario se debe revisar el código de Apps Script (doGet/doPost), el mapeo de columnas y la validación de cupos por identificador privado. No activar el modo real ni afirmar guardados sin respuesta verificable. No utilizar mode:no-cors para dar por confirmada una escritura cuya respuesta no pueda leerse.
+
+## Integración Apps Script preparada
+
+El código instalable está en `integrations/google-sheets/Code.gs`; instrucciones completas en `integrations/google-sheets/INSTALAR.md`. `api/invitation.js` implementa el puente privado de Vercel. Configurar `RSVP_SCRIPT_URL` y `RSVP_API_KEY` en Vercel y `API_KEY`/`WEDDING_URL` en Apps Script. Estas piezas aún no están instaladas ni verificadas contra la hoja real; el frontend permanece en demo. Las seis pruebas de `node --test tests/rsvp-backend.cjs` verifican el contrato con dobles de Google Sheets y del servicio HTTP, no una escritura en producción.
