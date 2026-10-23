@@ -53,3 +53,5 @@ Se eliminó la escena independiente de detalles (Nos encontramos en Lima); la ub
 Regalos usa fondo marfil y un monograma pequeño. Lugares reservados usa burgundy liso, dos líneas finas y la cantidad asignada como protagonista.
 
 La intro se reproduce sola y pasa a la portada al terminar. Ante error, bloqueo de autoplay o espera superior a 15 segundos, se muestra la portada sin bloquear la navegación. Con movimiento reducido se muestra directamente la portada.
+
+Regalos incorpora un anturio fotográfico decorativo generado, con transparencia, como remate pequeño y parcialmente recortado en el borde inferior. El texto sigue sobre marfil y Lugares reservados conserva el fondo burgundy liso.
