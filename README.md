@@ -57,3 +57,7 @@ La intro se reproduce sola y pasa a la portada al terminar. Ante error, bloqueo 
 Regalos incorpora un anturio fotográfico decorativo generado, con transparencia, como remate pequeño y parcialmente recortado en el borde inferior. El texto sigue sobre marfil y Lugares reservados conserva el fondo burgundy liso.
 
 La referencia de materiales se traduce en pequeños bordes de encaje vectorial en portada y regalos, esquinas finas de plata envejecida en el formulario y una separación de papel muy suave. Los SVG decorativos son originales y no contienen textos ni estrellas. No se reproduce el collage ni se añaden flores nuevas.
+
+## Materialidad revisada
+
+materials.css unifica portada, dress code y RSVP con papel de algodón, encaje y esquinas de plata mediante recursos decorativos generados, optimizados a WebP. Las muestras de la paleta usan pinceladas con textura, conservando los seis tonos de config.js. Regalos utiliza una hoja marfil sobre burgundy, encaje en el borde superior y el anturio pequeño inferior. Los márgenes evitan que la decoración interfiera con el texto.
