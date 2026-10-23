@@ -2,7 +2,7 @@
 export const wedding = {
   assets: { video: 'assets/apertura.mp4', monogram: 'assets/monograma-transparente.png', couple: 'assets/claudia-jorge.png', chapel: 'assets/capilla.png', cats: null },
   // URL de ubicación exacta, verificada por la pareja. null oculta el botón.
-  mapsUrl: null,
+  mapsUrl: 'https://maps.app.goo.gl/8mHtKmxxQYuKBo6k8',
   accessDetails: null,
   giftText: null,
   // Paleta sugerida confirmada por referencia visual. [{ name: 'Nombre del color', hex: '#123456' }]. Editable.

@@ -17,7 +17,7 @@ Abrir mediante un servidor HTTP, no con `file://`, porque se usan módulos ES.
 
 Se incorporaron la acuarela auténtica y la foto vertical en blanco y negro de Claudia y Jorge desde complementos.zip. El draft editorial se conserva como referencia en /workspace/wedding-original/complementos/. Faltan las referencias e ilustración de Hera y Ramsés y una foto original de la capilla (opcional, la acuarela ya está integrada). Los puntos `assets.chapel`, `assets.couple` y `assets.cats` aceptan sus futuras rutas; no se muestran imágenes inventadas. La acuarela se presenta con una ventana CSS que muestra la arquitectura y oculta los textos incrustados del programa para evitar duplicación y horarios anteriores. Se conserva el archivo íntegro; el color se atenúa solo con CSS. La foto de los novios ocupa una escena de pantalla completa con object-fit: cover y encuadre responsive; el texto se superpone dejando los rostros libres. El archivo original no se modifica. La sección del monograma utiliza una versión derivada con fondo transparente, preparada para integrarse al papel como marca de agua. El original permanece en assets/monograma.png.
 
-También quedan pendientes la ubicación exacta verificada en Google Maps, acceso, estacionamiento y regalos. No se publican servicios ni enlaces no confirmados. `mapsUrl: null` oculta Cómo llegar hasta verificar el destino con la pareja. El diseño no impone burgundy a las invitadas.
+Quedan pendientes acceso, estacionamiento y regalos. No se publican servicios ni enlaces no confirmados. `mapsUrl` contiene el enlace de Google Maps proporcionado por la pareja; Cómo llegar abre esa ubicación en otra pestaña. El diseño no impone burgundy a las invitadas.
 
 ## RSVP: estado real y conexión segura
 
