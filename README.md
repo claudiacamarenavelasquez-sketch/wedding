@@ -55,3 +55,5 @@ Regalos usa fondo marfil y un monograma pequeño. Lugares reservados usa burgund
 La intro se reproduce sola y pasa a la portada al terminar. Ante error, bloqueo de autoplay o espera superior a 15 segundos, se muestra la portada sin bloquear la navegación. Con movimiento reducido se muestra directamente la portada.
 
 Regalos incorpora un anturio fotográfico decorativo generado, con transparencia, como remate pequeño y parcialmente recortado en el borde inferior. El texto sigue sobre marfil y Lugares reservados conserva el fondo burgundy liso.
+
+La referencia de materiales se traduce en pequeños bordes de encaje vectorial en portada y regalos, esquinas finas de plata envejecida en el formulario y una separación de papel muy suave. Los SVG decorativos son originales y no contienen textos ni estrellas. No se reproduce el collage ni se añaden flores nuevas.
