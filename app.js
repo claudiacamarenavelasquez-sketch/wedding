@@ -12,12 +12,21 @@ for (const color of wedding.guestPalette) { if (!/^#[\da-f]{6}$/i.test(color.hex
 if ($('swatches').children.length) $('palette-note').textContent = 'Tonos sugeridos, a tu elección.';
 if (!matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) { document.documentElement.classList.add('js-motion'); const observer = new IntersectionObserver(items => items.forEach(item => { if (item.isIntersecting) { item.target.classList.add('visible'); observer.unobserve(item.target); } }), { threshold: .08 }); document.querySelectorAll('.reveal').forEach(el => observer.observe(el)); }
 const film = $('film');
-function closeIntro() { film.pause(); $('intro').hidden = true; document.body.style.overflow = ''; }
-$('skip-intro').onclick = closeIntro;
-$('sound').onclick = () => { film.muted = !film.muted; $('sound').textContent = film.muted ? 'Activar sonido' : 'Silenciar'; $('sound').setAttribute('aria-pressed', String(!film.muted)); };
-film.onended = closeIntro; film.onerror = closeIntro;
-$('play').onclick = async () => { try { await film.play(); $('play').hidden = true; } catch { $('play').textContent = 'No se pudo reproducir. Puedes omitir la introducción.'; } };
-if (wedding.assets.video) { film.src = wedding.assets.video; film.poster = 'assets/hero.jpg'; $('intro').hidden = false; document.body.style.overflow = 'hidden'; if (matchMedia('(prefers-reduced-motion: reduce)').matches) $('play').hidden = false; else film.play().catch(() => { $('play').hidden = false; }); }
+let introTimeout;
+function closeIntro() { clearTimeout(introTimeout); film.pause(); $('intro').hidden = true; document.body.style.overflow = ''; }
+film.onended = closeIntro;
+film.onerror = closeIntro;
+// Sin controles: reproducción automática silenciada. Si no puede reproducirse,
+// se muestra la invitación; nunca se deja una pantalla bloqueada.
+if (wedding.assets.video && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  film.muted = true;
+  film.src = wedding.assets.video;
+  film.poster = 'assets/hero.jpg';
+  $('intro').hidden = false;
+  document.body.style.overflow = 'hidden';
+  introTimeout = setTimeout(closeIntro, 15000);
+  film.play().catch(closeIntro);
+}
 const demo = wedding.rsvp.mode !== 'live';
 let invitation;
 // Fragment tokens avoid sending invitation identifiers to static hosting logs.

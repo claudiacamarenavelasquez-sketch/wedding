@@ -1,6 +1,6 @@
 # Claudia & Jorge · 12 de diciembre de 2026
 
-Invitación editorial responsive en HTML, CSS y JavaScript, sin dependencias de producción ni compilación. Incluye las diez escenas del brief, apertura con sonido opcional y omisión, monograma original, programa confirmado y RSVP explícitamente demostrativo.
+Invitación editorial responsive en HTML, CSS y JavaScript, sin dependencias de producción ni compilación. Incluye las diez escenas del brief, apertura automática silenciada y sin botones, monograma original, programa confirmado y RSVP explícitamente demostrativo.
 
 ## Ejecutar
 
@@ -51,3 +51,5 @@ La composición actual incorpora editorial.css, foto a pantalla completa, detall
 Se eliminó la escena independiente de detalles (Nos encontramos en Lima); la ubicación permanece junto a la capilla. Dress code reproduce la composición de la referencia: seis tonos sugeridos configurables, ilustraciones de moda decorativas generadas, vestido largo o midi elegante, traje en tonos neutros e indicación de evitar blanco, ivory y burgundy.
 
 Regalos usa fondo marfil y un monograma pequeño. Lugares reservados usa burgundy liso, dos líneas finas y la cantidad asignada como protagonista.
+
+La intro se reproduce sola y pasa a la portada al terminar. Ante error, bloqueo de autoplay o espera superior a 15 segundos, se muestra la portada sin bloquear la navegación. Con movimiento reducido se muestra directamente la portada.
