@@ -1,6 +1,6 @@
 // Rutas locales: añadir únicamente los recursos auténticos de la pareja.
 export const wedding = {
-  assets: { video: 'assets/apertura.mp4', monogram: 'assets/sello-relieve.webp', couple: 'assets/claudia-jorge.png', chapel: 'assets/capilla-silueta.webp', cats: null },
+  assets: { video: 'assets/apertura.mp4', monogram: 'assets/monograma-floral.webp', couple: 'assets/claudia-jorge.png', chapel: 'assets/capilla-silueta.webp', cats: null },
   // URL de ubicación exacta, verificada por la pareja. null oculta el botón.
   mapsUrl: 'https://maps.app.goo.gl/8mHtKmxxQYuKBo6k8',
   accessDetails: null,

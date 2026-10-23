@@ -1,7 +1,7 @@
 import { wedding } from './config.js';
 const $ = id => document.getElementById(id);
 const media = (id, src, alt) => { if (!src) return; const img = new Image(); img.src = src; img.alt = alt; img.loading = id === 'monogram' ? 'eager' : 'lazy'; const fallback = [...$(id).childNodes]; img.addEventListener('error', () => $(id).replaceChildren(...fallback)); $(id).replaceChildren(img); };
-media('monogram', wedding.assets.monogram, 'Sello marfil en relieve de Claudia y Jorge con anturio');
+media('monogram', wedding.assets.monogram, 'Monograma C y J con anturio burgundy');
 media('couple-photo', wedding.assets.couple, 'Claudia y Jorge');
 media('chapel', wedding.assets.chapel, 'Acuarela de la capilla del ANCPCPP');
 media('cats', wedding.assets.cats, 'Hera y Ramsés');

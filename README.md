@@ -1,126 +1,91 @@
-# Claudia & Jorge · 12 de diciembre de 2026
+# Claudia & Jorge · Invitación web
 
-Invitación editorial responsive en HTML, CSS y JavaScript, sin dependencias de producción ni compilación. Incluye las diez escenas del brief, apertura automática silenciada y sin botones, monograma original, programa confirmado y RSVP explícitamente demostrativo.
+Invitación responsive en HTML, CSS y JavaScript, con funciones de Vercel para el RSVP. Boda el 12 de diciembre de 2026 en ANCPCPP, Lima.
 
-## Ejecutar
+## Desarrollo
 
-Desde `/workspace/wedding`: `python3 -m http.server 3000 --bind 0.0.0.0`.
-Abrir mediante un servidor HTTP, no con `file://`, porque se usan módulos ES.
+Desde `/workspace/wedding`:
 
-## Programa confirmado
+```sh
+python3 -m http.server 3000 --bind 0.0.0.0
+```
 
-3:30 p. m.: ceremonia religiosa. 5:00 p. m.: ceremonia civil. 6:00 p. m.: inicio de la fiesta. Estos horarios reemplazan los del brief y los incrustados en la acuarela.
+No hay dependencias de producción ni compilación. Usar HTTP: los módulos ES no se ejecutan correctamente con `file://`. El servidor estático sirve la interfaz; las funciones `/api` se ejecutan en Vercel.
 
-## Recursos e información
+## Diseño y archivos
 
-`config.js` centraliza rutas, paleta de invitadas, indicaciones, regalos, Maps y RSVP. Se conservaron sin alterar el video, monograma y fotograma del ZIP recibido. El original completo está respaldado fuera del proyecto, en `/workspace/wedding-original/claudia_jorge_web/`.
+- `index.html`: escenas, programa y formulario.
+- `styles.css`, `editorial.css`, `materials.css`: estilos; la dirección visual más reciente está al final de materials.css.
+- `app.js`: apertura, recursos, paletas y RSVP.
+- `config.js`: datos configurables y rutas.
+- `assets/`: recursos y fuentes locales con sus licencias.
+- `api/invitation.js`: puente privado entre el navegador y Apps Script.
 
-Se incorporaron la acuarela auténtica y la foto vertical en blanco y negro de Claudia y Jorge desde complementos.zip. El draft editorial se conserva como referencia en /workspace/wedding-original/complementos/. Faltan las referencias e ilustración de Hera y Ramsés y una foto original de la capilla (opcional, la acuarela ya está integrada). Los puntos `assets.chapel`, `assets.couple` y `assets.cats` aceptan sus futuras rutas; no se muestran imágenes inventadas. La capilla se presenta con un recurso derivado de fondo transparente, sin textos incrustados y con bordes orgánicos. El original se conserva en assets/capilla.png. La foto de los novios ocupa una escena de pantalla completa con object-fit: cover y encuadre responsive; el texto se superpone dejando los rostros libres. El archivo original no se modifica. La sección del monograma utiliza una versión derivada con fondo transparente, preparada para integrarse al papel como marca de agua. El original permanece en assets/monograma.png.
+La portada sigue la referencia floral elegida por la pareja: papel marfil, encaje diagonal, marco burgundy, anturios en esquinas y monograma central C/J con anturio. El fondo (`portada-floral.webp`) y el monograma transparente (`monograma-floral.webp`) son capas separadas preparadas a partir de la referencia. Los textos son HTML editable y la flecha enlaza con Nuestra historia. El sello anterior ya no se muestra.
 
-Quedan pendientes acceso, estacionamiento y regalos. No se publican servicios ni enlaces no confirmados. `mapsUrl` contiene el enlace de Google Maps proporcionado por la pareja; Cómo llegar abre esa ubicación en otra pestaña. El diseño no impone burgundy a las invitadas.
+Solo hay dos familias tipográficas: **Bodoni Moda** para títulos, textos, campos, botones y números; **Pinyon Script** para el ampersand caligráfico de portada. Se sirven localmente desde assets/fonts. No se usan las antiguas familias Cormorant Garamond o DM Sans.
 
-## RSVP: estado real y conexión segura
+La foto de los novios ocupa una escena completa. La capilla utiliza una versión aislada con transparencia de la acuarela proporcionada; el original sigue en assets/capilla.png. El video se presenta completo, con una capa sincronizada desenfocada para llenar la pantalla vertical; tocarlo avanza a la portada. La intro está silenciada y no muestra controles. Si falla o se bloquea, se muestra la portada; con movimiento reducido se omite automáticamente.
 
-Por defecto `mode: 'auto'`: el enlace general muestra demostración y los enlaces privados con #invite usan el backend. Familia y dos lugares son ejemplos claramente señalados; NO se guardan datos ni se usa localStorage. No se leen `nombre` ni `cupos` de la URL. No hay backend ni base de datos conectados. No cambiar a `live` hasta implementar y probar lo siguiente:
+El prototipo recibido se conserva fuera del checkout en `/workspace/wedding-original/claudia_jorge_web/`. Los complementos originales están en `/workspace/wedding-original/complementos/`.
 
-1. Crear una base privada (por ejemplo PostgreSQL administrado) con `invitations(id, token_hash UNIQUE, name, seats)` y `responses(invitation_id UNIQUE REFERENCES invitations, attending, count, names, message, updated_at)`. Un organizador autenticado administra los cupos; nunca el invitado.
-2. Generar tokens aleatorios criptográficos de al menos 32 bytes en el servidor. Guardar solo su hash y entregar a cada familia su enlace `/#invite=TOKEN`. El fragmento no se envía al alojamiento estático; el navegador lo usa en Authorization. Es una credencial privada: cualquiera que reciba el enlace puede usarlo. No poner nombres ni cupos en URLs, analítica o logs. Permitir revocación/rotación.
-3. Implementar funciones Vercel en `/api/invitation` con GET y PUT. Leer `Authorization: Bearer TOKEN`, calcular su hash, buscar una sola invitación. Sin token válido: 401/404 genérico. No permitir listar invitaciones. Responder `Cache-Control: private, no-store`; no registrar tokens o datos personales.
-4. GET devuelve `{name, seats, response: null | {attending, count, names, message}}`. PUT acepta solo `{attending, count, names, message}`. Obtener SIEMPRE seats desde la base. Rechazar cantidad no entera, negativa, cero si asiste, mayor al cupo, nombres vacíos o incoherentes y mensajes de más de 2000 caracteres. Si no asiste, exigir count=0 y names=[]. Limitar nombres a 120 caracteres. Rechazar campos desconocidos y cuerpos excesivos. Hacer validación y actualización atómica para evitar carreras con cambios de cupo.
-5. Hacer upsert por invitation_id para actualizar respuestas sin duplicados. PUT responde JSON solo tras confirmar la escritura. Aplicar limitación de solicitudes, mismo origen y HTTPS. Mantener credenciales únicamente en variables privadas del servidor. Si se utiliza Google Sheets, acceder desde el backend con cuenta de servicio privada, nunca desde el navegador; controlar concurrencia y escrituras con el mismo rigor.
-6. Probar tokens inválidos, aislamiento entre familias, manipulación del cupo, confirmación parcial, rechazo, actualización y errores de almacenamiento. Luego activar `rsvp.mode: 'live'`.
+## Información confirmada
 
-El adaptador frontend ya consume ese contrato y muestra errores sin afirmar un guardado cuando falla la petición. Las validaciones del navegador son solo de experiencia de usuario y deben repetirse en el servidor.
+- 3:30 p. m.: ceremonia religiosa.
+- 5:00 p. m.: ceremonia civil.
+- 6:00 p. m.: inicio de la fiesta.
+- Ubicación: enlace de Maps proporcionado por la pareja en config.js.
+- Dress code: paletas separadas para mujeres y hombres; acuarelas ovaladas y figurines de color moderado. Se indica evitar blanco, ivory y burgundy.
+- Regalos: datos bancarios proporcionados por la pareja en index.html. `giftRegistryUrl` está pendiente; Lista de regalos se muestra desactivado con Próximamente y se habilita al configurar una URL HTTPS válida.
+
+No se inventaron horarios adicionales, hoteles, estacionamiento o indicaciones de acceso. Aún faltan las referencias e ilustración auténtica de Hera y Ramsés.
+
+## RSVP
+
+El titular y sus cupos aparecen junto al formulario en una sola hoja de papel. No se vuelve a pedir el nombre del titular. Con un pase no hay nombres adicionales; con más pases se piden los acompañantes confirmados. Se permiten confirmaciones parciales y rechazos. No hay campo de mensaje.
+
+El modo `auto` utiliza el backend solo cuando el enlace contiene `#invite=TOKEN`. El enlace general muestra datos de ejemplo y el botón Probar confirmación, y no envía ni guarda respuestas. El estado de prueba se informa al intentar confirmar; no se afirma un guardado real en este modo.
+
+Los enlaces privados consumen `/api/invitation`:
+
+- GET devuelve únicamente nombre, cupos y respuesta de la invitación autenticada.
+- PUT envía `{attending, count, names, message}`; message es una cadena vacía por compatibilidad.
+- El primer nombre es el titular identificado; los siguientes son los acompañantes.
+- El backend y Apps Script verifican los cupos guardados, sin confiar en cantidades de la URL ni del navegador.
+- La clave privada nunca se incluye en el frontend. Las respuestas se actualizan por ID y se confirma el guardado después de la escritura.
+
+### Google Sheets y Apps Script
+
+Código: `integrations/google-sheets/Code.gs`.
+
+Pasos completos: `integrations/google-sheets/INSTALAR.md`.
+
+`crearBaseRSVP` crea una base nueva, importa nombres y pases de la lista original sin modificarla y prepara las pestañas Invitados y RSVP. Los enlaces quedan en E de Invitados. El ID del archivo creado se guarda automáticamente en `RSVP_SPREADSHEET_ID`, dentro de las propiedades de ese proyecto Apps Script. Volver a ejecutar reutiliza el archivo y conserva enlaces existentes.
+
+`generarEnlacesFaltantes` crea enlaces únicamente para filas que todavía no tienen uno. `generarEnlaceSeleccionado` renueva un enlace y revoca el anterior de esa fila. Mantener la hoja y cada enlace privados. Si se actualiza el código de Apps Script, publicar una nueva versión de la misma implementación.
+
+Variables privadas de Vercel:
+
+- `RSVP_API_KEY`: misma clave que `API_KEY` en Apps Script.
+- `RSVP_SCRIPT_URL`: opcional; el endpoint proporcionado por la pareja ya está definido como destino predeterminado del backend.
+
+No pegar claves en el chat, código, configuración pública o logs. Configurar límites de solicitudes en Vercel Firewall según el uso. Las pruebas locales usan dobles de la API y Sheets; no demuestran por sí solas una escritura en la hoja de producción.
 
 ## Vercel
 
-Importar el repositorio, elegir preset **Other**, sin comando de build ni instalación y directorio de salida `.`. `vercel.json` define cabeceras. No hace falta framework. El modo demo se puede desplegar directamente; el RSVP real requiere las funciones y la base indicadas. No se ha publicado ni desplegado automáticamente.
+Importar el repositorio, preset Other, sin comando de build ni instalación y directorio de salida `.`. Las funciones de api se detectan automáticamente. Configurar las variables privadas y volver a desplegar. `vercel.json` define cabeceras de seguridad. La publicación de cambios en GitHub no confirma por sí misma un despliegue de Vercel.
+
+Dominio de la invitación: https://claudiayjorge.vercel.app
 
 ## Validación
 
-`node --check app.js` y prueba de navegador documentada en `tests/browser.cjs`. La prueba usa Playwright y Chromium del entorno, sin añadir dependencias a la aplicación. Ejecutar con el servidor en puerto 3000: `node tests/browser.cjs`. Comprueba recursos, intro, demo, cupos, rechazo de parámetros públicos y ausencia de desbordamiento en móvil/tableta/escritorio.
+Con el servidor en puerto 3000 y Playwright/Chromium disponibles en este entorno:
 
-## Actualización de dirección de arte
+```sh
+node tests/browser.cjs
+node tests/design-scenes.cjs
+node tests/rsvp-form.cjs
+node --test tests/rsvp-backend.cjs
+```
 
-Se retiró el rótulo vertical de portada. La capilla se acompaña de un marco doble de papelería, separadores e iconos lineales para el programa. `assets/anturio-editorial.png` es una naturaleza muerta decorativa generada para esta invitación; no representa el lugar ni a los novios. Se conserva como recurso disponible, pero no se muestra en Regalos ni Lugares reservados: ambas escenas utilizan papelería sobria, sin fotografías de fondo.
-
-La composición actual incorpora editorial.css, foto a pantalla completa, detalles botánicos, papelería en la sección de detalles y formulario con doble marco. Se eliminaron los rótulos de capítulos numerados.
-
-## Ajustes finales solicitados
-
-Se eliminó la escena independiente de detalles (Nos encontramos en Lima); la ubicación permanece junto a la capilla. Dress code reproduce la composición de la referencia: seis tonos sugeridos configurables, ilustraciones de moda decorativas generadas, vestido largo o midi elegante, traje en tonos neutros e indicación de evitar blanco, ivory y burgundy.
-
-Regalos usa fondo marfil y un monograma pequeño. Lugares reservados usa burgundy liso, dos líneas finas y la cantidad asignada como protagonista.
-
-La intro se reproduce sola y pasa a la portada al terminar. Ante error, bloqueo de autoplay o espera superior a 15 segundos, se muestra la portada sin bloquear la navegación. Con movimiento reducido se muestra directamente la portada.
-
-Regalos incorpora un anturio fotográfico decorativo generado, con transparencia, como remate pequeño y parcialmente recortado en el borde inferior. El texto sigue sobre marfil y Lugares reservados conserva el fondo burgundy liso.
-
-La referencia de materiales se traduce en pequeños bordes de encaje vectorial en portada y regalos, esquinas finas de plata envejecida en el formulario y una separación de papel muy suave. Los SVG decorativos son originales y no contienen textos ni estrellas. No se reproduce el collage ni se añaden flores nuevas.
-
-## Materialidad revisada
-
-materials.css unifica portada, dress code y RSVP con papel de algodón, encaje y esquinas de plata mediante recursos decorativos generados, optimizados a WebP. Las muestras de la paleta usan pinceladas con textura, conservando los seis tonos de config.js. Regalos utiliza una hoja marfil sobre burgundy, encaje en el borde superior y el anturio pequeño inferior. Los márgenes evitan que la decoración interfiera con el texto.
-
-## Hoja de RSVP elegida por la pareja
-
-- Documento: https://docs.google.com/spreadsheets/d/1xup8YEIi4OSnbCZizovOZj587_md5l0pjYDMb48INtk/edit
-- Pestaña indicada: `RSVP`, gid `1294208008`.
-- Su estructura aún no se ha podido inspeccionar: el acceso a Google Sheets está bloqueado por la red del entorno y no se ha verificado autorización para escribir.
-- Mantener este documento privado. El formulario no debe redirigir a la lista ni descargarla en el navegador. La conexión debe realizarse desde el backend, validando los cupos guardados por invitación.
-- Se requiere una exportación de la pestaña o sus encabezados para definir el mapeo, y configurar autorización privada del backend antes de activar el modo real. El enlace de edición por sí solo no habilita escrituras. No se ha enviado ninguna confirmación a esta hoja.
-
-### Apps Script proporcionado
-
-Endpoint de implementación recibido de la pareja:
-`https://script.google.com/macros/s/AKfycbxI9qiR24_O1ng66gGS9KZdwCNToXEmLvMevIPPmJPL58Y4ObWG6vx_uS-1hENuZvM/exec`
-
-La solicitud de lectura está bloqueada por el proxy de red (403 CONNECT); todavía no se conoce el contrato de entrada/salida ni se ha probado una escritura. Antes de conectar el formulario se debe revisar el código de Apps Script (doGet/doPost), el mapeo de columnas y la validación de cupos por identificador privado. No activar el modo real ni afirmar guardados sin respuesta verificable. No utilizar mode:no-cors para dar por confirmada una escritura cuya respuesta no pueda leerse.
-
-## Integración Apps Script preparada
-
-El código instalable está en `integrations/google-sheets/Code.gs`; instrucciones completas en `integrations/google-sheets/INSTALAR.md`. `api/invitation.js` implementa el puente privado de Vercel. Configurar `RSVP_SCRIPT_URL` y `RSVP_API_KEY` en Vercel y `API_KEY`/`WEDDING_URL` en Apps Script. Estas piezas aún no están instaladas ni verificadas contra la hoja real; el frontend permanece en demo. Las seis pruebas de `node --test tests/rsvp-backend.cjs` verifican el contrato con dobles de Google Sheets y del servicio HTTP, no una escritura en producción.
-
-El bloque de fecha, programa y ubicación tiene espaciado compacto. El video principal usa object-fit: contain para mostrar todas las escenas sin recortes. Una segunda capa sincronizada con desenfoque rellena el viewport vertical. Tocar la imagen o activar su control accesible avanza a la portada. El archivo original permanece intacto.
-
-## RSVP y encaje fino
-
-Se sustituyó el fondo de papel por una versión con encaje mucho más estrecho y esquinas de plata reducidas. También se estrecharon los bordes de Regalos y cierre. El formulario tiene márgenes propios, sin campo de mensaje ni campo visible para volver a escribir al titular. Un pase no requiere nombres; con dos o más se piden únicamente los acompañantes que asistirán. El payload conserva al titular precargado como primer nombre para mantener el contrato del backend. `node tests/rsvp-form.cjs` valida 12 combinaciones de cupos y tamaños de pantalla con API simulada.
-
-## Estado de conexión actual
-
-El endpoint Apps Script respondió `{ok:true, service:"wedding-rsvp", version:1}` en una comprobación pública. No se ha confirmado una escritura real ni se han inspeccionado las variables de Vercel. El modo auto conecta enlaces privados a /api/invitation. La URL del script proporcionado ya es el valor predeterminado del servidor; RSVP_SCRIPT_URL permite cambiarla. RSVP_API_KEY debe configurarse en Vercel con la misma API_KEY privada de Apps Script. El enlace general permanece como demostración explícita.
-
-## Adaptación a la lista existente
-
-Apps Script versión 2 reconoce la pestaña original gid 1294208008 con Invitados en B y Pases en C. Conserva A:C y agrega D:J para identificador, hash, enlace y confirmaciones en la misma fila. Las pruebas locales cubren conservación de datos, generación de enlaces, revocación y guardado en esta estructura. Debe instalarse, ejecutarse prepararRSVP y publicarse como nueva versión para aplicarse a la hoja real.
-
-Apps Script versión 3 agrega `generarEnlacesFaltantes`, ejecutable sin selección activa. Detecta una única lista por Invitados/Pases, conserva todos los enlaces existentes y omite filas inválidas. Once pruebas locales cubren esta operación repetible y las reglas del backend. Requiere pegar el script actualizado en Google y publicar una nueva versión.
-
-## Creación automática de una base separada
-
-Ejecutar crearBaseRSVP en el proyecto Apps Script existente crea un nuevo archivo de Drive, importa nombres y pases de B/C sin alterar el original, prepara Invitados y RSVP y genera enlaces en E de Invitados. Guarda RSVP_SPREADSHEET_ID en las propiedades para que el backend use ese archivo. Si ya existe, lo reutiliza. Requiere publicar la nueva versión del mismo Apps Script para aplicar la selección de base al endpoint. Las 14 pruebas locales verifican creación, conservación del original, idempotencia y escritura simulada en la nueva base.
-
-## Tipografía y sello de portada
-
-Dos familias locales: Bodoni Moda para el texto editorial y DM Sans para etiquetas, campos y botones. Los archivos WOFF2 y sus licencias están en assets/fonts. Solo la portada lleva una versión del monograma en un sello de relieve con transparencia; el resto de escenas no incluye monogramas. La portada no muestra fecha ni ubicación. La portada utiliza assets/sello-relieve.webp, derivado de la propuesta de sello compacto. El relieve está integrado en la imagen; no se aplican círculos ni filtros de relieve CSS.
-
-La capilla se amplió y se preparó una versión con transparencia a partir de la acuarela original. El programa usa texto más pequeño y la ceremonia religiosa comienza a las 3:30 p. m.; civil 5:00 p. m. y fiesta 6:00 p. m. tests/design-scenes.cjs verifica tipografías, único sello, portada, capilla, horarios y video completo con avance al tocar.
-
-El dress code divide las ilustraciones y sus paletas en dos columnas: los seis tonos para mujeres y negro, gris y azul marino para hombres. Las muestras usan una máscara de acuarela translúcida, con colores configurables. La indicación de evitar blanco, ivory y burgundy se mantiene al pie. El botón de ubicación tiene esquinas redondeadas.
-
-## Regalos y confirmación unificada
-
-Regalos contiene los datos de cuenta facilitados por la pareja. giftRegistryUrl sigue sin definir; el botón Lista de regalos queda desactivado con Próximamente, y se habilita al configurar una URL HTTPS válida. La sección de lugares reservados se integró bajo el título de confirmación: titular y cupos se muestran junto al formulario, conservando la validación del backend. En móvil, ese contenido precede al formulario.
-
-Las paletas de dress code utilizan ahora pinceladas verticales de acuarela con bordes de brocha y transparencia suave. Se conservan los tonos elegidos; las ilustraciones de vestido y traje se muestran con menor contraste, saturación y opacidad para integrarse al papel.
-
-Se corrigió la superposición rectangular del sello retirando los bordes, círculos y filtros que se aplicaban sobre el monograma transparente. La imagen del sello se renderiza completa, con opacidad normal y sin filtros.
-
-El acabado final de dress code usa manchas ovaladas y anchas, con grano y vetas de pincel (assets/acuarela-oval.webp), en lugar de las tiras finas rectangulares. Los figurines recuperan color con opacidad 0.82 y saturación moderada; se mantiene el fondo transparente y el papel como soporte.
-
-La confirmación usa una sola hoja con textura y encaje para todo el contenido (rsvp-paper), sin otra tarjeta dentro del formulario. El botón de confirmación es redondeado como el de ubicación. Se verificaron las familias computadas en el navegador: únicamente Bodoni Moda y DM Sans. Se simplificó la jerarquía y se retiraron cursivas de títulos y textos principales para evitar una apariencia de múltiples estilos.
-
-Las cuentas bancarias, preguntas y opciones del RSVP, campos y botones utilizan ahora Bodoni Moda, igual que el texto de lectura. DM Sans se limita a detalles pequeños como etiquetas de escena y notas. Se comprobaron las familias computadas de esos elementos en cuatro tamaños y la conservación exacta de los números bancarios.
-
-La fuente principal final es Bodoni Moda, elegida por el estilo Didona de alto contraste de la referencia de la pareja. Se aplica también a datos bancarios, campos y botones; DM Sans queda para metadatos pequeños. Se retiraron los archivos y declaraciones de la familia anterior para conservar solo esas dos familias. El ampersand de portada usa la cursiva de Bodoni Moda.
+Para otro puerto, anteponer `TEST_PORT=3003` a las tres pruebas de navegador. Estas comprueban la navegación, recursos, dos familias tipográficas, portada, programa, video completo, paletas, aislamiento visual y formulario con distintos cupos y tamaños. Las pruebas de backend verifican límites, actualización, separación entre familias, conservación de datos originales y generación repetible de enlaces con servicios simulados.
