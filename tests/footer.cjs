@@ -10,11 +10,13 @@ const assert = require('node:assert/strict');
     assert.match(await footer.innerText(), /Todo el amor nos trajo hasta aquí/i);
     assert.doesNotMatch(await footer.innerText(), /Con amor/i);
     await footer.locator('.footer-botanical').evaluate(img => img.decode());
+    assert.match(await footer.locator('.footer-botanical').getAttribute('src'), /cipreses-acuarela/);
+    assert(Number(await footer.locator('.footer-botanical').evaluate(img => getComputedStyle(img).opacity)) <= .45);
     assert.match(await footer.evaluate(el => getComputedStyle(el, ':before').backgroundImage), /encaje-real/);
     assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
     if (width === 390) await footer.screenshot({ path: '/tmp/footer-refined.png' });
     await page.close();
   }
   await browser.close();
-  console.log('Cierre: texto, anturio, encaje y ancho verificados en cuatro tamaños.');
+  console.log('Cierre: texto, cipreses, encaje y ancho verificados en cuatro tamaños.');
 })().catch(error => { console.error(error); process.exit(1); });

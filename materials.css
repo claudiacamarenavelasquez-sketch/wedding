@@ -256,3 +256,7 @@ footer>.eyebrow{font-family:var(--font-editorial);font-size:14px;letter-spacing:
 .reserved-details .seats{justify-content:flex-start}
 .rsvp .rsvp-paper form{max-width:none}
 @media(max-width:650px){.rsvp-paper{grid-template-columns:minmax(0,1fr);gap:26px;padding:65px 28px 75px 42px}.rsvp-heading{text-align:center}.rsvp-heading>h2{font-size:29px}.reserved-details .seats{justify-content:center}}
+
+/* Cipreses al margen del cierre, con el mismo tono de acuarela de la capilla. */
+footer .footer-cypresses{width:clamp(190px,26vw,350px);height:78%;right:-45px;bottom:-12px;object-fit:contain;object-position:right bottom;opacity:.45;filter:saturate(.35);pointer-events:none}
+@media(max-width:650px){footer .footer-cypresses{width:210px;height:65%;right:-10px;bottom:-10px;opacity:.38}}
