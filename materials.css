@@ -133,3 +133,10 @@ body{font-optical-sizing:auto}.cover h1{font-size:clamp(42px,6.5vw,88px);letter-
 .reserved-details .seats span:first-child{font-size:51px}
 .day .venue #maps,.gift-content .button,.rsvp .rsvp-paper #submit-rsvp{font-size:14px}
 }
+
+/* Cierre sobre papel marfil, rematado por una cinta de encaje. */
+footer{background:#f7f0e7;padding-top:145px;padding-bottom:90px}
+footer:before{top:0;height:65px;background:url('assets/encaje-real.webp') center/auto 78px repeat-x;opacity:1;z-index:1}
+footer .footer-botanical{width:clamp(210px,27vw,370px);height:75%;right:-55px;bottom:-10px;object-fit:contain;transform:none;opacity:.6;z-index:-1}
+footer>.eyebrow{font-family:var(--font-editorial);font-size:14px;letter-spacing:.18em}
+@media(max-width:650px){footer{padding:125px 24px 75px}footer:before{height:45px;background-size:auto 56px}footer .footer-botanical{width:220px;right:-85px;height:52%;bottom:-25px;opacity:.48}footer>.eyebrow{font-size:11px;letter-spacing:.13em}}
