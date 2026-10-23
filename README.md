@@ -21,7 +21,7 @@ Quedan pendientes acceso, estacionamiento y regalos. No se publican servicios ni
 
 ## RSVP: estado real y conexión segura
 
-Por defecto `mode: 'demo'`. Familia y dos lugares son ejemplos claramente señalados; NO se guardan datos ni se usa localStorage. No se leen `nombre` ni `cupos` de la URL. No hay backend ni base de datos conectados. No cambiar a `live` hasta implementar y probar lo siguiente:
+Por defecto `mode: 'auto'`: el enlace general muestra demostración y los enlaces privados con #invite usan el backend. Familia y dos lugares son ejemplos claramente señalados; NO se guardan datos ni se usa localStorage. No se leen `nombre` ni `cupos` de la URL. No hay backend ni base de datos conectados. No cambiar a `live` hasta implementar y probar lo siguiente:
 
 1. Crear una base privada (por ejemplo PostgreSQL administrado) con `invitations(id, token_hash UNIQUE, name, seats)` y `responses(invitation_id UNIQUE REFERENCES invitations, attending, count, names, message, updated_at)`. Un organizador autenticado administra los cupos; nunca el invitado.
 2. Generar tokens aleatorios criptográficos de al menos 32 bytes en el servidor. Guardar solo su hash y entregar a cada familia su enlace `/#invite=TOKEN`. El fragmento no se envía al alojamiento estático; el navegador lo usa en Authorization. Es una credencial privada: cualquiera que reciba el enlace puede usarlo. No poner nombres ni cupos en URLs, analítica o logs. Permitir revocación/rotación.
@@ -86,3 +86,7 @@ El bloque de fecha, programa y ubicación tiene espaciado compacto. El video de 
 ## RSVP y encaje fino
 
 Se sustituyó el fondo de papel por una versión con encaje mucho más estrecho y esquinas de plata reducidas. También se estrecharon los bordes de Regalos y cierre. El formulario tiene márgenes propios, sin campo de mensaje ni campo visible para volver a escribir al titular. Un pase no requiere nombres; con dos o más se piden únicamente los acompañantes que asistirán. El payload conserva al titular precargado como primer nombre para mantener el contrato del backend. `node tests/rsvp-form.cjs` valida 12 combinaciones de cupos y tamaños de pantalla con API simulada.
+
+## Estado de conexión actual
+
+El endpoint Apps Script respondió `{ok:true, service:"wedding-rsvp", version:1}` en una comprobación pública. No se ha confirmado una escritura real ni se han inspeccionado las variables de Vercel. El modo auto conecta enlaces privados a /api/invitation. La URL del script proporcionado ya es el valor predeterminado del servidor; RSVP_SCRIPT_URL permite cambiarla. RSVP_API_KEY debe configurarse en Vercel con la misma API_KEY privada de Apps Script. El enlace general permanece como demostración explícita.

@@ -27,10 +27,10 @@ if (wedding.assets.video && !matchMedia('(prefers-reduced-motion: reduce)').matc
   introTimeout = setTimeout(closeIntro, 15000);
   film.play().catch(closeIntro);
 }
-const demo = wedding.rsvp.mode !== 'live';
 let invitation;
 // Fragment tokens avoid sending invitation identifiers to static hosting logs.
 const token = new URLSearchParams(location.hash.slice(1)).get('invite');
+const demo = wedding.rsvp.mode === 'demo' || (wedding.rsvp.mode === 'auto' && !token);
 async function api(method, data) { const response = await fetch(wedding.rsvp.endpoint, { method, headers: { Authorization: `Bearer ${token}`, ...(data ? {'Content-Type':'application/json'} : {}) }, ...(data ? { body: JSON.stringify(data) } : {}), cache: 'no-store', credentials: 'same-origin', referrerPolicy: 'no-referrer' }); if (!response.ok) throw new Error(response.status === 401 || response.status === 404 ? 'No pudimos validar tu invitación. Contacta a los novios.' : 'No se pudo completar la solicitud. Inténtalo nuevamente.'); return response.json(); }
 function renderNames(values = []) {
   const count = Number($('quantity').value);

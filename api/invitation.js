@@ -7,7 +7,7 @@ module.exports = async function handler(req, res) {
   }
   const token = /^Bearer ([a-f0-9]{64})$/.exec(req.headers.authorization || '')?.[1];
   if (!token) return res.status(401).json({ error: 'INVALID_INVITATION' });
-  const endpoint = process.env.RSVP_SCRIPT_URL;
+  const endpoint = process.env.RSVP_SCRIPT_URL || 'https://script.google.com/macros/s/AKfycbxI9qiR24_O1ng66gGS9KZdwCNToXEmLvMevIPPmJPL58Y4ObWG6vx_uS-1hENuZvM/exec';
   const key = process.env.RSVP_API_KEY;
   if (!endpoint || !/^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec$/.test(endpoint) || !key || key.length < 32) {
     return res.status(503).json({ error: 'NOT_CONFIGURED' });

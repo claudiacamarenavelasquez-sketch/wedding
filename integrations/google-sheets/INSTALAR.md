@@ -44,13 +44,13 @@ Copia la URL terminada en `/exec`. Al abrirla devuelve un estado público sin no
 
 El repositorio ya incluye `api/invitation.js`, que conecta el formulario con Apps Script sin revelar la clave. Agrega en **Settings → Environment Variables**:
 
-- `RSVP_SCRIPT_URL`: URL `/exec` de la implementación.
+- `RSVP_SCRIPT_URL`: URL `/exec` de la implementación; opcional si conservas la URL que ya proporcionaste y está configurada por defecto en el backend.
 - `RSVP_API_KEY`: exactamente la misma clave privada del paso 2.
 
 Vuelve a desplegar después de configurar las variables. Estas son variables del servidor; no uses prefijos públicos. El código Apps Script devuelve errores en JSON; Vercel los convierte en errores HTTP. No usar `no-cors`, porque impediría comprobar los guardados.
 
 ## 6. Activación y prueba final
 
-El frontend sigue en modo `demo` hasta comprobar la configuración externa. Después cambia `rsvp.mode` a `live` en config.js y despliega. Abre un enlace de prueba generado por el menú y verifica una confirmación parcial, su actualización y que no se permita superar el cupo. Usa una familia de prueba y elimínala después según prefieras. No afirmar conexión real hasta ver el resultado en RSVP. Mantén la hoja privada.
+El frontend usa modo `auto`: un enlace privado con `#invite=...` utiliza el backend y el enlace general sin token muestra demostración. No hace falta cambiar config.js. Después de configurar las variables y desplegar, abre un enlace de prueba generado por el menú y verifica una confirmación parcial, su actualización y que no se permita superar el cupo. Usa una familia de prueba y elimínala después según prefieras. No afirmar conexión real hasta ver el resultado en RSVP. Mantén la hoja privada.
 
 El script valida los cupos en servidor, busca una sola familia por token, serializa las escrituras con LockService y actualiza una respuesta por ID. No exporta la lista a los invitados. Quien tenga el enlace privado de una familia puede gestionar su confirmación; se revoca generando otro enlace. Para exposición pública conviene activar límites de solicitudes en Vercel Firewall.

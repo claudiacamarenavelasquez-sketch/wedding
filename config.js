@@ -14,6 +14,6 @@ export const wedding = {
     { name: 'Camel', hex: '#b2875c' },
     { name: 'Chocolate', hex: '#69472f' }
   ],
-  // Cambiar a 'live' solo después de implementar el contrato del README.
-  rsvp: { mode: 'demo', endpoint: '/api/invitation', demo: { name: 'Familia de ejemplo', seats: 2 } }
+  // auto: enlace privado => backend; enlace general => demostración explícita.
+  rsvp: { mode: 'auto', endpoint: '/api/invitation', demo: { name: 'Familia de ejemplo', seats: 2 } }
 };
