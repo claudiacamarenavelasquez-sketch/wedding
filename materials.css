@@ -144,7 +144,7 @@ footer>.eyebrow{font-family:var(--font-editorial);font-size:14px;letter-spacing:
 /* Indicaciones discretas y muestras de color más pequeñas. */
 .attire-split article>p{font-size:18px;line-height:1.35}
 .dress .watercolor-palette .swatch{width:85%;max-width:49px;justify-self:center}
-.dress .attire-men .watercolor-palette{grid-template-columns:repeat(4,minmax(0,1fr));gap:9px 4px}
+.dress .attire-men .watercolor-palette{grid-template-columns:repeat(3,minmax(0,1fr));gap:9px 4px}
 .dress .attire-men .watercolor-palette .swatch:last-child i{opacity:.9}
 @media(max-width:650px){.attire-split article>p{font-size:15px;line-height:1.35}.dress .watercolor-palette .swatch{max-width:32px}.dress .attire-men .watercolor-palette{gap:8px 3px}}
 
@@ -192,3 +192,6 @@ footer>.eyebrow{font-family:var(--font-editorial);font-size:14px;letter-spacing:
 .rsvp .rsvp-paper input:not([type=radio]),.rsvp .rsvp-paper select{background:transparent;border:0;border-bottom:1px solid #b7aca8;border-radius:0;padding:8px 0;font-size:18px}
 .rsvp .rsvp-paper #submit-rsvp{font-size:14px;margin-top:12px;padding:13px 18px}
 @media(max-width:650px){.rsvp-paper{padding:65px 28px 75px 42px;gap:24px}.rsvp-heading>h2{font-size:29px;margin-bottom:24px}.reserved-details #guest-name{font-size:21px;margin-bottom:22px}.reserved-details .seats span:first-child{font-size:25px}.reserved-details .seats span:last-child{font-size:20px}.rsvp .rsvp-paper .radio{font-size:17px;line-height:1.4}.rsvp .rsvp-paper #submit-rsvp{font-size:13px}}
+
+/* Texto de invitación del dress code a la escala solicitada. */
+.dress .dress-invitation{font-size:15px;line-height:1.5}
