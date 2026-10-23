@@ -1,6 +1,6 @@
 // Rutas locales: añadir únicamente los recursos auténticos de la pareja.
 export const wedding = {
-  assets: { video: 'assets/apertura.mp4', monogram: 'assets/monograma-transparente.png', couple: 'assets/claudia-jorge.png', chapel: 'assets/capilla.png', cats: null },
+  assets: { video: 'assets/apertura.mp4', monogram: 'assets/monograma-transparente.png', couple: 'assets/claudia-jorge.png', chapel: 'assets/capilla-silueta.webp', cats: null },
   // URL de ubicación exacta, verificada por la pareja. null oculta el botón.
   mapsUrl: 'https://maps.app.goo.gl/8mHtKmxxQYuKBo6k8',
   accessDetails: null,
@@ -13,6 +13,11 @@ export const wedding = {
     { name: 'Rosa empolvado', hex: '#bf907d' },
     { name: 'Camel', hex: '#b2875c' },
     { name: 'Chocolate', hex: '#69472f' }
+  ],
+  menPalette: [
+    { name: 'Negro', hex: '#191716' },
+    { name: 'Gris', hex: '#747675' },
+    { name: 'Azul marino', hex: '#26354c' }
   ],
   // auto: enlace privado => backend; enlace general => demostración explícita.
   rsvp: { mode: 'auto', endpoint: '/api/invitation', demo: { name: 'Familia de ejemplo', seats: 2 } }

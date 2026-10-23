@@ -9,13 +9,13 @@ Abrir mediante un servidor HTTP, no con `file://`, porque se usan módulos ES.
 
 ## Programa confirmado
 
-4:00 p. m.: ceremonia religiosa. 5:00 p. m.: ceremonia civil. 6:00 p. m.: inicio de la fiesta. Estos horarios reemplazan los del brief y los incrustados en la acuarela.
+3:30 p. m.: ceremonia religiosa. 5:00 p. m.: ceremonia civil. 6:00 p. m.: inicio de la fiesta. Estos horarios reemplazan los del brief y los incrustados en la acuarela.
 
 ## Recursos e información
 
 `config.js` centraliza rutas, paleta de invitadas, indicaciones, regalos, Maps y RSVP. Se conservaron sin alterar el video, monograma y fotograma del ZIP recibido. El original completo está respaldado fuera del proyecto, en `/workspace/wedding-original/claudia_jorge_web/`.
 
-Se incorporaron la acuarela auténtica y la foto vertical en blanco y negro de Claudia y Jorge desde complementos.zip. El draft editorial se conserva como referencia en /workspace/wedding-original/complementos/. Faltan las referencias e ilustración de Hera y Ramsés y una foto original de la capilla (opcional, la acuarela ya está integrada). Los puntos `assets.chapel`, `assets.couple` y `assets.cats` aceptan sus futuras rutas; no se muestran imágenes inventadas. La acuarela se presenta con una ventana CSS que muestra la arquitectura y oculta los textos incrustados del programa para evitar duplicación y horarios anteriores. Se conserva el archivo íntegro; el color se atenúa solo con CSS. La foto de los novios ocupa una escena de pantalla completa con object-fit: cover y encuadre responsive; el texto se superpone dejando los rostros libres. El archivo original no se modifica. La sección del monograma utiliza una versión derivada con fondo transparente, preparada para integrarse al papel como marca de agua. El original permanece en assets/monograma.png.
+Se incorporaron la acuarela auténtica y la foto vertical en blanco y negro de Claudia y Jorge desde complementos.zip. El draft editorial se conserva como referencia en /workspace/wedding-original/complementos/. Faltan las referencias e ilustración de Hera y Ramsés y una foto original de la capilla (opcional, la acuarela ya está integrada). Los puntos `assets.chapel`, `assets.couple` y `assets.cats` aceptan sus futuras rutas; no se muestran imágenes inventadas. La capilla se presenta con un recurso derivado de fondo transparente, sin textos incrustados y con bordes orgánicos. El original se conserva en assets/capilla.png. La foto de los novios ocupa una escena de pantalla completa con object-fit: cover y encuadre responsive; el texto se superpone dejando los rostros libres. El archivo original no se modifica. La sección del monograma utiliza una versión derivada con fondo transparente, preparada para integrarse al papel como marca de agua. El original permanece en assets/monograma.png.
 
 Quedan pendientes acceso, estacionamiento y regalos. No se publican servicios ni enlaces no confirmados. `mapsUrl` contiene el enlace de Google Maps proporcionado por la pareja; Cómo llegar abre esa ubicación en otra pestaña. El diseño no impone burgundy a las invitadas.
 
@@ -81,7 +81,7 @@ La solicitud de lectura está bloqueada por el proxy de red (403 CONNECT); todav
 
 El código instalable está en `integrations/google-sheets/Code.gs`; instrucciones completas en `integrations/google-sheets/INSTALAR.md`. `api/invitation.js` implementa el puente privado de Vercel. Configurar `RSVP_SCRIPT_URL` y `RSVP_API_KEY` en Vercel y `API_KEY`/`WEDDING_URL` en Apps Script. Estas piezas aún no están instaladas ni verificadas contra la hoja real; el frontend permanece en demo. Las seis pruebas de `node --test tests/rsvp-backend.cjs` verifican el contrato con dobles de Google Sheets y del servicio HTTP, no una escritura en producción.
 
-El bloque de fecha, programa y ubicación tiene espaciado compacto. El video de apertura usa object-fit: cover, altura dinámica del viewport y desenfoque suave; llena la pantalla sin letterboxing, recortando los laterales según la proporción del dispositivo. El archivo original permanece intacto.
+El bloque de fecha, programa y ubicación tiene espaciado compacto. El video principal usa object-fit: contain para mostrar todas las escenas sin recortes. Una segunda capa sincronizada con desenfoque rellena el viewport vertical. Tocar la imagen o activar su control accesible avanza a la portada. El archivo original permanece intacto.
 
 ## RSVP y encaje fino
 
@@ -100,3 +100,11 @@ Apps Script versión 3 agrega `generarEnlacesFaltantes`, ejecutable sin selecci�
 ## Creación automática de una base separada
 
 Ejecutar crearBaseRSVP en el proyecto Apps Script existente crea un nuevo archivo de Drive, importa nombres y pases de B/C sin alterar el original, prepara Invitados y RSVP y genera enlaces en E de Invitados. Guarda RSVP_SPREADSHEET_ID en las propiedades para que el backend use ese archivo. Si ya existe, lo reutiliza. Requiere publicar la nueva versión del mismo Apps Script para aplicar la selección de base al endpoint. Las 14 pruebas locales verifican creación, conservación del original, idempotencia y escritura simulada en la nueva base.
+
+## Tipografía y sello de portada
+
+Dos familias locales: Cormorant Garamond para el texto editorial y DM Sans para etiquetas, campos y botones. Los archivos WOFF2 y sus licencias están en assets/fonts. Solo la portada lleva el monograma original, reducido a un sello de relieve por CSS; el resto de escenas no incluye monogramas. La portada no muestra fecha ni ubicación. Una propuesta opcional más compacta está en assets/sello-alternativo.webp y no sustituye el sello actual.
+
+La capilla se amplió y se preparó una versión con transparencia a partir de la acuarela original. El programa usa texto más pequeño y la ceremonia religiosa comienza a las 3:30 p. m.; civil 5:00 p. m. y fiesta 6:00 p. m. tests/design-scenes.cjs verifica tipografías, único sello, portada, capilla, horarios y video completo con avance al tocar.
+
+El dress code divide las ilustraciones y sus paletas en dos columnas: los seis tonos para mujeres y negro, gris y azul marino para hombres. Las muestras usan una máscara de acuarela translúcida, con colores configurables. La indicación de evitar blanco, ivory y burgundy se mantiene al pie. El botón de ubicación tiene esquinas redondeadas.

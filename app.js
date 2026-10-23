@@ -8,18 +8,42 @@ media('cats', wedding.assets.cats, 'Hera y Ramsés');
 if (wedding.mapsUrl && /^https:\/\/(www\.)?(google\.(com|com.pe)|maps\.app\.goo\.gl)\//.test(wedding.mapsUrl)) { $('maps').href = wedding.mapsUrl; $('maps').hidden = false; $('maps-pending').hidden = true; }
 
 if (wedding.giftText) $('gift-details').textContent = wedding.giftText;
-for (const color of wedding.guestPalette) { if (!/^#[\da-f]{6}$/i.test(color.hex)) continue; const item = document.createElement('span'); item.className = 'swatch'; const chip = document.createElement('i'); chip.style.backgroundColor = color.hex; item.append(chip, document.createTextNode(color.name)); $('swatches').append(item); }
+function renderPalette(id, colors) {
+  for (const color of colors) {
+    if (!/^#[\da-f]{6}$/i.test(color.hex)) continue;
+    const item = document.createElement('span');
+    item.className = 'swatch';
+    item.title = color.name;
+    item.setAttribute('role', 'img');
+    item.setAttribute('aria-label', color.name);
+    const chip = document.createElement('i');
+    chip.setAttribute('aria-hidden', 'true');
+    chip.style.backgroundColor = color.hex;
+    item.append(chip);
+    $(id).append(item);
+  }
+}
+renderPalette('swatches', wedding.guestPalette);
+renderPalette('swatches-men', wedding.menPalette);
 if ($('swatches').children.length) $('palette-note').textContent = 'Tonos sugeridos, a tu elección.';
 if (!matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) { document.documentElement.classList.add('js-motion'); const observer = new IntersectionObserver(items => items.forEach(item => { if (item.isIntersecting) { item.target.classList.add('visible'); observer.unobserve(item.target); } }), { threshold: .08 }); document.querySelectorAll('.reveal').forEach(el => observer.observe(el)); }
 const film = $('film');
+const filmBackdrop = $('film-backdrop');
 let introTimeout;
-function closeIntro() { clearTimeout(introTimeout); film.pause(); $('intro').hidden = true; document.body.style.overflow = ''; }
+function closeIntro() { clearTimeout(introTimeout); film.pause(); filmBackdrop.pause(); $('intro').hidden = true; document.body.style.overflow = ''; }
+$('intro-advance').onclick = () => { closeIntro(); $('portada').scrollIntoView({ behavior: 'instant' }); };
+film.onplay = () => { filmBackdrop.currentTime = film.currentTime; filmBackdrop.play().catch(() => {}); };
+film.ontimeupdate = () => { if (Math.abs(filmBackdrop.currentTime - film.currentTime) > .3) filmBackdrop.currentTime = film.currentTime; };
+film.onpause = () => filmBackdrop.pause();
 film.onended = closeIntro;
 film.onerror = closeIntro;
 // Sin controles: reproducción automática silenciada. Si no puede reproducirse,
 // se muestra la invitación; nunca se deja una pantalla bloqueada.
 if (wedding.assets.video && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
   film.muted = true;
+  filmBackdrop.muted = true;
+  filmBackdrop.src = wedding.assets.video;
+  filmBackdrop.poster = 'assets/hero.jpg';
   film.src = wedding.assets.video;
   film.poster = 'assets/hero.jpg';
   $('intro').hidden = false;
