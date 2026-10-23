@@ -69,3 +69,10 @@ materials.css unifica portada, dress code y RSVP con papel de algodón, encaje y
 - Su estructura aún no se ha podido inspeccionar: el acceso a Google Sheets está bloqueado por la red del entorno y no se ha verificado autorización para escribir.
 - Mantener este documento privado. El formulario no debe redirigir a la lista ni descargarla en el navegador. La conexión debe realizarse desde el backend, validando los cupos guardados por invitación.
 - Se requiere una exportación de la pestaña o sus encabezados para definir el mapeo, y configurar autorización privada del backend antes de activar el modo real. El enlace de edición por sí solo no habilita escrituras. No se ha enviado ninguna confirmación a esta hoja.
+
+### Apps Script proporcionado
+
+Endpoint de implementación recibido de la pareja:
+`https://script.google.com/macros/s/AKfycbxI9qiR24_O1ng66gGS9KZdwCNToXEmLvMevIPPmJPL58Y4ObWG6vx_uS-1hENuZvM/exec`
+
+La solicitud de lectura está bloqueada por el proxy de red (403 CONNECT); todavía no se conoce el contrato de entrada/salida ni se ha probado una escritura. Antes de conectar el formulario se debe revisar el código de Apps Script (doGet/doPost), el mapeo de columnas y la validación de cupos por identificador privado. No activar el modo real ni afirmar guardados sin respuesta verificable. No utilizar mode:no-cors para dar por confirmada una escritura cuya respuesta no pueda leerse.
