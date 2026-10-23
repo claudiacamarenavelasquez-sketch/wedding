@@ -5,8 +5,15 @@ export const wedding = {
   mapsUrl: null,
   accessDetails: null,
   giftText: null,
-  // [{ name: 'Nombre del color', hex: '#123456' }]. Vacío hasta confirmar.
-  guestPalette: [],
+  // Paleta sugerida confirmada por referencia visual. [{ name: 'Nombre del color', hex: '#123456' }]. Editable.
+  guestPalette: [
+    { name: 'Salvia', hex: '#798169' },
+    { name: 'Oliva', hex: '#535b32' },
+    { name: 'Azul petróleo', hex: '#193e46' },
+    { name: 'Rosa empolvado', hex: '#bf907d' },
+    { name: 'Camel', hex: '#b2875c' },
+    { name: 'Chocolate', hex: '#69472f' }
+  ],
   // Cambiar a 'live' solo después de implementar el contrato del README.
   rsvp: { mode: 'demo', endpoint: '/api/invitation', demo: { name: 'Familia de ejemplo', seats: 2 } }
 };

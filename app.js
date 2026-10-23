@@ -6,7 +6,7 @@ media('couple-photo', wedding.assets.couple, 'Claudia y Jorge');
 media('chapel', wedding.assets.chapel, 'Acuarela de la capilla del ANCPCPP');
 media('cats', wedding.assets.cats, 'Hera y Ramsés');
 if (wedding.mapsUrl && /^https:\/\/(www\.)?(google\.(com|com.pe)|maps\.app\.goo\.gl)\//.test(wedding.mapsUrl)) { $('maps').href = wedding.mapsUrl; $('maps').hidden = false; $('maps-pending').hidden = true; }
-if (wedding.accessDetails) $('access-details').textContent = wedding.accessDetails;
+
 if (wedding.giftText) $('gift-details').textContent = wedding.giftText;
 for (const color of wedding.guestPalette) { if (!/^#[\da-f]{6}$/i.test(color.hex)) continue; const item = document.createElement('span'); item.className = 'swatch'; const chip = document.createElement('i'); chip.style.backgroundColor = color.hex; item.append(chip, document.createTextNode(color.name)); $('swatches').append(item); }
 if ($('swatches').children.length) $('palette-note').textContent = 'Tonos sugeridos, a tu elección.';

@@ -17,7 +17,7 @@ Abrir mediante un servidor HTTP, no con `file://`, porque se usan módulos ES.
 
 Se incorporaron la acuarela auténtica y la foto vertical en blanco y negro de Claudia y Jorge desde complementos.zip. El draft editorial se conserva como referencia en /workspace/wedding-original/complementos/. Faltan las referencias e ilustración de Hera y Ramsés y una foto original de la capilla (opcional, la acuarela ya está integrada). Los puntos `assets.chapel`, `assets.couple` y `assets.cats` aceptan sus futuras rutas; no se muestran imágenes inventadas. La acuarela se presenta con una ventana CSS que muestra la arquitectura y oculta los textos incrustados del programa para evitar duplicación y horarios anteriores. Se conserva el archivo íntegro; el color se atenúa solo con CSS. La foto de los novios ocupa una escena de pantalla completa con object-fit: cover y encuadre responsive; el texto se superpone dejando los rostros libres. El archivo original no se modifica. La sección del monograma utiliza una versión derivada con fondo transparente, preparada para integrarse al papel como marca de agua. El original permanece en assets/monograma.png.
 
-También quedan pendientes la ubicación exacta verificada en Google Maps, paleta definitiva, instrucciones de vestimenta adicionales, acceso, estacionamiento y regalos. No se publican servicios ni enlaces no confirmados. `mapsUrl: null` oculta Cómo llegar hasta verificar el destino con la pareja. El diseño no impone burgundy a las invitadas.
+También quedan pendientes la ubicación exacta verificada en Google Maps, acceso, estacionamiento y regalos. No se publican servicios ni enlaces no confirmados. `mapsUrl: null` oculta Cómo llegar hasta verificar el destino con la pareja. El diseño no impone burgundy a las invitadas.
 
 ## RSVP: estado real y conexión segura
 
@@ -45,3 +45,7 @@ Importar el repositorio, elegir preset **Other**, sin comando de build ni instal
 Se retiró el rótulo vertical de portada. La capilla se acompaña de un marco doble de papelería, separadores e iconos lineales para el programa. `assets/anturio-editorial.png` es una naturaleza muerta decorativa generada para esta invitación; no representa el lugar ni a los novios. Se usa en Regalos y Lugares reservados para aportar profundidad visual con la paleta burgundy.
 
 La composición actual incorpora editorial.css, foto a pantalla completa, detalles botánicos, papelería en la sección de detalles y formulario con doble marco. Se eliminaron los rótulos de capítulos numerados.
+
+## Ajustes finales solicitados
+
+Se eliminó la escena independiente de detalles (Nos encontramos en Lima); la ubicación permanece junto a la capilla. Dress code reproduce la composición de la referencia: seis tonos sugeridos configurables, ilustraciones de moda decorativas generadas, vestido largo o midi elegante, traje en tonos neutros e indicación de evitar blanco, ivory y burgundy.
