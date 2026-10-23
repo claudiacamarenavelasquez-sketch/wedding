@@ -118,3 +118,5 @@ Las paletas de dress code utilizan ahora pinceladas verticales de acuarela con b
 Se corrigió la superposición rectangular del sello retirando los bordes, círculos y filtros que se aplicaban sobre el monograma transparente. La imagen del sello se renderiza completa, con opacidad normal y sin filtros.
 
 El acabado final de dress code usa manchas ovaladas y anchas, con grano y vetas de pincel (assets/acuarela-oval.webp), en lugar de las tiras finas rectangulares. Los figurines recuperan color con opacidad 0.82 y saturación moderada; se mantiene el fondo transparente y el papel como soporte.
+
+La confirmación usa una sola hoja con textura y encaje para todo el contenido (rsvp-paper), sin otra tarjeta dentro del formulario. El botón de confirmación es redondeado como el de ubicación. Se verificaron las familias computadas en el navegador: únicamente Cormorant Garamond y DM Sans. Se simplificó la jerarquía y se retiraron cursivas de títulos y textos principales para evitar una apariencia de múltiples estilos.
