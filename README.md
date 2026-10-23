@@ -112,3 +112,5 @@ El dress code divide las ilustraciones y sus paletas en dos columnas: los seis t
 ## Regalos y confirmación unificada
 
 Regalos contiene los datos de cuenta facilitados por la pareja. giftRegistryUrl sigue sin definir; el botón Lista de regalos queda desactivado con Próximamente, y se habilita al configurar una URL HTTPS válida. La sección de lugares reservados se integró bajo el título de confirmación: titular y cupos se muestran junto al formulario, conservando la validación del backend. En móvil, ese contenido precede al formulario.
+
+Las paletas de dress code utilizan ahora pinceladas verticales de acuarela con bordes de brocha y transparencia suave. Se conservan los tonos elegidos; las ilustraciones de vestido y traje se muestran con menor contraste, saturación y opacidad para integrarse al papel.
