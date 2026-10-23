@@ -5,6 +5,7 @@ export const wedding = {
   mapsUrl: 'https://maps.app.goo.gl/8mHtKmxxQYuKBo6k8',
   accessDetails: null,
   giftText: null,
+  giftRegistryUrl: null, // Pendiente del enlace de la lista de regalos.
   // Paleta sugerida confirmada por referencia visual. [{ name: 'Nombre del color', hex: '#123456' }]. Editable.
   guestPalette: [
     { name: 'Salvia', hex: '#798169' },

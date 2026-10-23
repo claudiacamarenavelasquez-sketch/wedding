@@ -8,6 +8,17 @@ media('cats', wedding.assets.cats, 'Hera y Ramsés');
 if (wedding.mapsUrl && /^https:\/\/(www\.)?(google\.(com|com.pe)|maps\.app\.goo\.gl)\//.test(wedding.mapsUrl)) { $('maps').href = wedding.mapsUrl; $('maps').hidden = false; $('maps-pending').hidden = true; }
 
 if (wedding.giftText) $('gift-details').textContent = wedding.giftText;
+if (wedding.giftRegistryUrl) {
+  try {
+    const giftUrl = new URL(wedding.giftRegistryUrl);
+    if (giftUrl.protocol === 'https:') {
+      $('gift-list').href = giftUrl.href;
+      $('gift-list').hidden = false;
+      $('gift-list-pending').hidden = true;
+      $('gift-pending-note').hidden = true;
+    }
+  } catch { /* Mantener el botón sin enlace hasta tener una URL válida. */ }
+}
 function renderPalette(id, colors) {
   for (const color of colors) {
     if (!/^#[\da-f]{6}$/i.test(color.hex)) continue;

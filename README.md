@@ -108,3 +108,7 @@ Dos familias locales: Cormorant Garamond para el texto editorial y DM Sans para 
 La capilla se amplió y se preparó una versión con transparencia a partir de la acuarela original. El programa usa texto más pequeño y la ceremonia religiosa comienza a las 3:30 p. m.; civil 5:00 p. m. y fiesta 6:00 p. m. tests/design-scenes.cjs verifica tipografías, único sello, portada, capilla, horarios y video completo con avance al tocar.
 
 El dress code divide las ilustraciones y sus paletas en dos columnas: los seis tonos para mujeres y negro, gris y azul marino para hombres. Las muestras usan una máscara de acuarela translúcida, con colores configurables. La indicación de evitar blanco, ivory y burgundy se mantiene al pie. El botón de ubicación tiene esquinas redondeadas.
+
+## Regalos y confirmación unificada
+
+Regalos contiene los datos de cuenta facilitados por la pareja. giftRegistryUrl sigue sin definir; el botón Lista de regalos queda desactivado con Próximamente, y se habilita al configurar una URL HTTPS válida. La sección de lugares reservados se integró bajo el título de confirmación: titular y cupos se muestran junto al formulario, conservando la validación del backend. En móvil, ese contenido precede al formulario.
