@@ -204,3 +204,5 @@ footer>.eyebrow{font-family:var(--font-editorial);font-size:14px;letter-spacing:
 /* Escala compacta para todas las horas y actividades del cronograma. */
 .day .program h3{font-size:15px}
 .day .program p{font-size:13px}
+
+.day .venue #maps{font-size:11px}
