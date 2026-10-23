@@ -90,3 +90,7 @@ Se sustituyó el fondo de papel por una versión con encaje mucho más estrecho 
 ## Estado de conexión actual
 
 El endpoint Apps Script respondió `{ok:true, service:"wedding-rsvp", version:1}` en una comprobación pública. No se ha confirmado una escritura real ni se han inspeccionado las variables de Vercel. El modo auto conecta enlaces privados a /api/invitation. La URL del script proporcionado ya es el valor predeterminado del servidor; RSVP_SCRIPT_URL permite cambiarla. RSVP_API_KEY debe configurarse en Vercel con la misma API_KEY privada de Apps Script. El enlace general permanece como demostración explícita.
+
+## Adaptación a la lista existente
+
+Apps Script versión 2 reconoce la pestaña original gid 1294208008 con Invitados en B y Pases en C. Conserva A:C y agrega D:J para identificador, hash, enlace y confirmaciones en la misma fila. Las pruebas locales cubren conservación de datos, generación de enlaces, revocación y guardado en esta estructura. Debe instalarse, ejecutarse prepararRSVP y publicarse como nueva versión para aplicarse a la hoja real.

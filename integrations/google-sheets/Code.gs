@@ -7,6 +7,8 @@ const SHEET_ID = '1xup8YEIi4OSnbCZizovOZj587_md5l0pjYDMb48INtk';
 const GUEST_TAB = 'Invitados';
 const RESPONSE_TAB = 'RSVP';
 const GUEST_HEADERS = ['ID', 'Titular', 'Cupos', 'TokenHash', 'Enlace'];
+const SOURCE_GID = 1294208008;
+const EXTRA_HEADERS = ['ID', 'TokenHash', 'Enlace', 'Asiste', 'Cantidad', 'Nombres', 'Actualizado'];
 const RESPONSE_HEADERS = ['ID', 'Asiste', 'Cantidad', 'Nombres', 'Mensaje', 'Actualizado'];
 
 function onOpen() {
@@ -18,10 +20,43 @@ function onOpen() {
 
 function prepararRSVP() {
   const book = SpreadsheetApp.openById(SHEET_ID);
-  ensureSheet_(book, GUEST_TAB, GUEST_HEADERS);
-  ensureSheet_(book, RESPONSE_TAB, RESPONSE_HEADERS);
-  // No se modifica contenido existente si las columnas no coinciden.
-  book.toast('Hojas preparadas. Agrega Titular y Cupos en Invitados.');
+  const layout = guestLayout_(book, true);
+  if (!layout.existing) ensureSheet_(book, RESPONSE_TAB, RESPONSE_HEADERS);
+  book.toast(layout.existing ? 'Lista conservada. Columnas D a J listas: ID, TokenHash, Enlace y confirmaciones.' : 'Hojas preparadas. Agrega Titular y Cupos en Invitados.');
+}
+
+// Reconoce la lista original: A se conserva, B=Invitados, C=Pases.
+function guestLayout_(book, prepare) {
+  const original = typeof book.getSheets === 'function' ? book.getSheets().find(sheet => sheet.getSheetId() === SOURCE_GID) : null;
+  if (original) {
+    const header = original.getRange(1, 2, 1, 2).getValues()[0];
+    if (String(header[0]).trim() === 'Invitados' && String(header[1]).trim() === 'Pases') {
+      const cells = original.getRange(1, 4, 1, EXTRA_HEADERS.length).getValues()[0];
+      const formulas = original.getRange(1, 4, 1, EXTRA_HEADERS.length).getFormulas()[0];
+      if (cells.some((value, index) => (value !== '' && value !== EXTRA_HEADERS[index]) || formulas[index])) throw new Error('Las columnas D a J ya tienen otros encabezados. No se modificó tu lista.');
+      // No adjudicar columnas vacías de encabezado que ya contengan datos.
+      if (prepare && original.getLastRow() > 1) {
+        const range = original.getRange(2, 4, original.getLastRow() - 1, EXTRA_HEADERS.length);
+        const values = range.getValues(), expressions = range.getFormulas();
+        if (cells.some((value, index) => value === '' && values.some((row, rowIndex) => row[index] !== '' || expressions[rowIndex][index]))) throw new Error('Hay datos sin encabezado en D:J. No se sobrescribió nada.');
+      }
+      if (prepare) original.getRange(1, 4, 1, EXTRA_HEADERS.length).setValues([EXTRA_HEADERS]);
+      else if (cells.some((value, index) => value !== EXTRA_HEADERS[index])) throw new Error('Ejecuta prepararRSVP primero.');
+      return { sheet: original, existing: true, idColumn: 4, tokenColumn: 5 };
+    }
+    // Una pestaña RSVP ya usada por el formato anterior se admite sin migrar.
+    if (original.getName() !== RESPONSE_TAB || String(original.getRange(1, 1).getValues()[0][0]) !== 'ID') throw new Error('La lista original debe tener Invitados en B1 y Pases en C1. No se modificó.');
+  }
+  const sheet = prepare ? ensureSheet_(book, GUEST_TAB, GUEST_HEADERS) : book.getSheetByName(GUEST_TAB);
+  checkHeaders_(sheet, GUEST_HEADERS);
+  return { sheet: sheet, existing: false, idColumn: 1, tokenColumn: 4 };
+}
+
+function guestRows_(layout) {
+  const sheet = layout.sheet;
+  if (sheet.getLastRow() < 2) return [];
+  return sheet.getRange(2, 1, sheet.getLastRow() - 1, layout.existing ? 10 : 5).getValues()
+    .map(row => layout.existing ? [row[3], row[1], row[2], row[4], row[5]] : row);
 }
 
 function ensureSheet_(book, name, headers) {
@@ -47,29 +82,31 @@ function generarEnlaceSeleccionado() {
   const website = (props.getProperty('WEDDING_URL') || '').replace(/\/$/, '');
   if (!/^https:\/\/[^\s#?]+$/.test(website)) throw new Error('Configura WEDDING_URL con la URL HTTPS de la invitación, sin parámetros ni fragmentos.');
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  if (sheet.getName() !== GUEST_TAB || sheet.getActiveRange().getRow() < 2 || sheet.getActiveRange().getNumRows() !== 1) {
-    throw new Error('Selecciona una sola fila de invitado en Invitados.');
+  const layout = guestLayout_(SpreadsheetApp.openById(SHEET_ID), false);
+  if (sheet.getSheetId() !== layout.sheet.getSheetId() || sheet.getActiveRange().getRow() < 2 || sheet.getActiveRange().getNumRows() !== 1) {
+    throw new Error('Selecciona una sola fila de tu lista de invitados, debajo de los encabezados.');
   }
   const lock = LockService.getScriptLock();
   lock.waitLock(20000);
   try {
-    checkHeaders_(sheet, GUEST_HEADERS);
     const row = sheet.getActiveRange().getRow();
-    const values = sheet.getRange(row, 1, 1, GUEST_HEADERS.length).getValues()[0];
+    const allGuests = guestRows_(layout);
+    const values = allGuests[row - 2];
+    if (!values) throw new Error('Selecciona una fila con datos.');
     if (!String(values[1]).trim() || !Number.isInteger(values[2]) || values[2] < 1 || values[2] > 100) throw new Error('Completa Titular y Cupos (entero entre 1 y 100).');
     const id = values[0] ? String(values[0]) : Utilities.getUuid();
-    const existing = sheet.getLastRow() > 1 ? sheet.getRange(2, 1, sheet.getLastRow() - 1, 1).getValues() : [];
+    const existing = allGuests.map(guest => [guest[0]]);
     if (existing.some((entry, index) => index + 2 !== row && String(entry[0]) === id)) throw new Error('El ID está duplicado. Cada familia debe tener uno distinto.');
     const token = hash_(Utilities.getUuid() + Utilities.getUuid());
-    sheet.getRange(row, 1).setValue(id);
-    sheet.getRange(row, 4, 1, 2).setValues([[hash_(token), website + '/#invite=' + token]]);
+    sheet.getRange(row, layout.idColumn).setValue(id);
+    sheet.getRange(row, layout.tokenColumn, 1, 2).setValues([[hash_(token), website + '/#invite=' + token]]);
     SpreadsheetApp.flush();
     SpreadsheetApp.getActiveSpreadsheet().toast('Enlace creado en la columna Enlace. Si había uno anterior, dejó de funcionar.');
   } finally { lock.releaseLock(); }
 }
 
 // Comprobación pública sin datos de invitados.
-function doGet() { return json_({ ok: true, service: 'wedding-rsvp', version: 1 }); }
+function doGet() { return json_({ ok: true, service: 'wedding-rsvp', version: 2 }); }
 
 function doPost(event) {
   const lock = LockService.getScriptLock();
@@ -86,19 +123,21 @@ function doPost(event) {
     locked = lock.tryLock(20000);
     if (!locked) return failure_('BUSY');
     const book = SpreadsheetApp.openById(SHEET_ID);
-    const guests = book.getSheetByName(GUEST_TAB);
-    const responses = book.getSheetByName(RESPONSE_TAB);
-    checkHeaders_(guests, GUEST_HEADERS);
-    checkHeaders_(responses, RESPONSE_HEADERS);
+    const layout = guestLayout_(book, false);
+    const guests = layout.sheet;
+    const responses = layout.existing ? guests : book.getSheetByName(RESPONSE_TAB);
+    if (!layout.existing) checkHeaders_(responses, RESPONSE_HEADERS);
     const digest = hash_(request.token);
-    const rows = guests.getLastRow() > 1 ? guests.getRange(2, 1, guests.getLastRow() - 1, GUEST_HEADERS.length).getValues() : [];
+    const rows = guestRows_(layout);
     const matches = rows.filter(row => same_(String(row[3]), digest));
     if (matches.length !== 1) return failure_('INVALID_INVITATION');
     const guest = matches[0];
     const id = String(guest[0]);
     const seats = guest[2]; // Única fuente de verdad: la hoja, nunca el navegador.
     if (!id || !String(guest[1]).trim() || !Number.isInteger(seats) || seats < 1 || seats > 100 || rows.filter(row => String(row[0]) === id).length !== 1) return failure_('INVALID_INVITATION');
-    const saved = responses.getLastRow() > 1 ? responses.getRange(2, 1, responses.getLastRow() - 1, RESPONSE_HEADERS.length).getValues() : [];
+    const guestRow = rows.indexOf(guest) + 2;
+    const current = layout.existing ? guests.getRange(guestRow, 7, 1, 4).getValues()[0] : null;
+    const saved = layout.existing ? (current[0] === '' ? [] : [[id, current[0], current[1], current[2], '', current[3]]]) : (responses.getLastRow() > 1 ? responses.getRange(2, 1, responses.getLastRow() - 1, RESPONSE_HEADERS.length).getValues() : []);
     const indices = saved.map((row, i) => String(row[0]) === id ? i : -1).filter(i => i >= 0);
     if (indices.length > 1) return failure_('DATA_ERROR');
     const index = indices.length ? indices[0] : -1;
@@ -110,10 +149,11 @@ function doPost(event) {
     try { response = validateResponse_(request.response, seats); }
     catch (error) { return failure_('INVALID_RESPONSE'); }
     const targetRow = index >= 0 ? index + 2 : Math.max(2, responses.getLastRow() + 1);
-    responses.getRange(targetRow, 1, 1, RESPONSE_HEADERS.length).setValues([[
-      id, response.attending ? 'Sí' : 'No', response.count,
-      JSON.stringify(response.names), text_(response.message), new Date()
-    ]]);
+    if (layout.existing) {
+      responses.getRange(guestRow, 7, 1, 4).setValues([[response.attending ? 'Sí' : 'No', response.count, JSON.stringify(response.names), new Date()]]);
+    } else {
+      responses.getRange(targetRow, 1, 1, RESPONSE_HEADERS.length).setValues([[id, response.attending ? 'Sí' : 'No', response.count, JSON.stringify(response.names), text_(response.message), new Date()]]);
+    }
     SpreadsheetApp.flush(); // Solo se responde éxito después de guardar.
     return json_({ ok: true });
   } catch (error) {

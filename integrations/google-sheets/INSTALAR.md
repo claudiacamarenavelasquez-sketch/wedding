@@ -13,23 +13,21 @@ En **Configuración del proyecto → Propiedades del script**, agrega:
 
 La misma API_KEY se configurará solo en Vercel.
 
-## 3. Preparar las pestañas
+## 3. Usar la lista actual sin reorganizarla
 
-Ejecuta **prepararRSVP** y autoriza el script con tu cuenta, propietaria de la hoja. Creará `Invitados` y usará `RSVP`.
+Esta versión reconoce la pestaña original por su gid `1294208008`, con **Invitados en B1 y Pases en C1**, como en la captura de la pareja. Conserva A, B y C.
 
-La fila 1 de `Invitados` debe ser exactamente:
+Ejecuta **prepararRSVP** desde el selector de funciones de Apps Script, acepta los permisos y recarga Google Sheets. Agrega solo estas columnas en la misma pestaña:
 
-| ID | Titular | Cupos | TokenHash | Enlace |
-|---|---|---|---|---|
+| D | E | F | G | H | I | J |
+|---|---|---|---|---|---|---|
+| ID | TokenHash | Enlace | Asiste | Cantidad | Nombres | Actualizado |
 
-La fila 1 de `RSVP` debe ser exactamente:
+No tienes que copiar los invitados a otra pestaña. Los datos originales de B y C se leen tal cual; las respuestas se actualizan en G:J en la misma fila. Si D:J ya contienen datos ajenos o fórmulas, el script se detiene sin sobrescribirlos.
 
-| ID | Asiste | Cantidad | Nombres | Mensaje | Actualizado |
-|---|---|---|---|---|---|
+Selecciona una fila de invitado (por ejemplo una celda de la fila 2) y usa **Invitaciones → Generar o renovar enlace de la fila seleccionada**. El enlace aparece en **F**. Si ejecutas de nuevo esa opción, revoca el enlace anterior de esa familia. La hoja es privada; cada familia recibe únicamente su enlace.
 
-**Si RSVP ya contiene otras columnas, el script se detiene sin reemplazarlas.** Guarda una copia y adapta los encabezados o envíame sus nombres para mapearlos. No borres respuestas existentes para forzar la instalación.
-
-En `Invitados`, completa únicamente **Titular** y **Cupos** para cada familia. Desde la hoja, recarga la página, selecciona una fila y usa **Invitaciones → Generar o renovar enlace de la fila seleccionada**. El script completa ID, TokenHash y Enlace. Si ejecutas de nuevo esa opción, revoca el enlace anterior de esa familia. Cada enlace es privado; no compartas la hoja ni los enlaces de otras familias.
+Se conserva compatibilidad con la instalación anterior que usaba Invitados (ID, Titular, Cupos, TokenHash, Enlace) y RSVP por separado. La lista original se utiliza preferentemente cuando sus encabezados corresponden a la captura.
 
 ## 4. Publicar Apps Script
 
