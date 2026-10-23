@@ -103,7 +103,7 @@ Ejecutar crearBaseRSVP en el proyecto Apps Script existente crea un nuevo archiv
 
 ## Tipografía y sello de portada
 
-Dos familias locales: Cormorant Garamond para el texto editorial y DM Sans para etiquetas, campos y botones. Los archivos WOFF2 y sus licencias están en assets/fonts. Solo la portada lleva el monograma original, reducido a un sello de relieve por CSS; el resto de escenas no incluye monogramas. La portada no muestra fecha ni ubicación. Una propuesta opcional más compacta está en assets/sello-alternativo.webp y no sustituye el sello actual.
+Dos familias locales: Cormorant Garamond para el texto editorial y DM Sans para etiquetas, campos y botones. Los archivos WOFF2 y sus licencias están en assets/fonts. Solo la portada lleva una versión del monograma en un sello de relieve con transparencia; el resto de escenas no incluye monogramas. La portada no muestra fecha ni ubicación. La portada utiliza assets/sello-relieve.webp, derivado de la propuesta de sello compacto. El relieve está integrado en la imagen; no se aplican círculos ni filtros de relieve CSS.
 
 La capilla se amplió y se preparó una versión con transparencia a partir de la acuarela original. El programa usa texto más pequeño y la ceremonia religiosa comienza a las 3:30 p. m.; civil 5:00 p. m. y fiesta 6:00 p. m. tests/design-scenes.cjs verifica tipografías, único sello, portada, capilla, horarios y video completo con avance al tocar.
 
@@ -114,3 +114,5 @@ El dress code divide las ilustraciones y sus paletas en dos columnas: los seis t
 Regalos contiene los datos de cuenta facilitados por la pareja. giftRegistryUrl sigue sin definir; el botón Lista de regalos queda desactivado con Próximamente, y se habilita al configurar una URL HTTPS válida. La sección de lugares reservados se integró bajo el título de confirmación: titular y cupos se muestran junto al formulario, conservando la validación del backend. En móvil, ese contenido precede al formulario.
 
 Las paletas de dress code utilizan ahora pinceladas verticales de acuarela con bordes de brocha y transparencia suave. Se conservan los tonos elegidos; las ilustraciones de vestido y traje se muestran con menor contraste, saturación y opacidad para integrarse al papel.
+
+Se corrigió la superposición rectangular del sello retirando los bordes, círculos y filtros que se aplicaban sobre el monograma transparente. La imagen del sello se renderiza completa, con opacidad normal y sin filtros.

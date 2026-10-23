@@ -35,16 +35,16 @@ footer{padding-top:100px}footer:before{content:'';position:absolute;left:0;right
 :root{--font-editorial:'Cormorant Garamond',serif;--font-detail:'DM Sans',sans-serif}
 body,body *{font-family:var(--font-editorial)}
 .eyebrow,.fine,.scroll-cue,.button,button,input,select,textarea,label,legend,.demo-note,.swatch,.seats span:last-child,.story-copy .eyebrow{font-family:var(--font-detail)}
-.cover .monogram.seal{position:relative;isolation:isolate;flex-shrink:0;display:flex;align-items:center;justify-content:center;width:110px;height:110px;min-height:0;margin:20px 0 32px;border-radius:50%;background:#e5d9c8;border:1px solid #c7b7a1;box-shadow:inset 2px 3px 6px #fff8e8,inset -3px -3px 6px #a9998244,2px 4px 6px #51412c1a}
-.cover .monogram.seal:before{content:'';position:absolute;inset:7px;border:1px solid #c7b7a1;border-radius:50%;box-shadow:0 1px 1px #fffaf388}
-.cover .monogram.seal img{width:76px;height:80px;max-height:none;max-width:none;opacity:.8;filter:grayscale(1) sepia(.3) drop-shadow(1px 1px 0 #fff9e9) drop-shadow(-.6px -.6px 0 #99856f77)}
+
+
+
 .cover .cover-border{padding-top:70px;padding-bottom:100px}.cover .edition{margin-bottom:15px}.cover .rule{margin:10px 0 12px}.cover .scroll-cue{margin-top:20px}.day-frame>h2{margin-top:0}.rsvp-heading{padding-top:0}
 /* Le plan complet reste visible; le fond flouté remplit l'écran vertical. */
 .intro #film-backdrop{z-index:0;object-fit:cover;filter:blur(24px) brightness(.65);transform:scale(1.1);pointer-events:none}
 .intro #film{z-index:1;object-fit:contain;filter:blur(.45px);transform:none}
 .intro-advance{position:absolute;inset:0;z-index:2;width:100%;height:100%;padding:0;border:0;background:transparent;color:transparent;cursor:pointer}
 .intro-advance:focus-visible{outline:2px solid var(--ivory);outline-offset:-8px}
-@media(max-width:650px){.cover .monogram.seal{width:96px;height:96px;margin:18px 0 28px}.cover .monogram.seal img{width:66px;height:70px}.cover .cover-border{padding-top:65px;padding-bottom:85px}.cover h1{font-size:51px}.intro #film{filter:blur(.4px)}}
+@media(max-width:650px){.cover .cover-border{padding-top:65px;padding-bottom:85px}.cover h1{font-size:51px}.intro #film{filter:blur(.4px)}}
 /* La capilla se presenta como acuarela aislada, con mayor presencia. */
 .day{padding-left:3vw;padding-right:3vw}.day-frame{padding-left:3%;padding-right:3%}.day #chapel:has(img){width:100%;max-width:1100px;aspect-ratio:auto;overflow:visible;margin:20px auto 12px}.day #chapel img{display:block;width:100%;height:auto;max-height:none;object-fit:contain;filter:none;mix-blend-mode:normal}.day .day-intro{font-size:21px;line-height:1.4;margin-bottom:15px}.day .program{max-width:760px;margin:16px auto 22px}.day .program h3{font-size:24px;line-height:1.15;margin:8px 0 5px}.day .program p{font-size:18px;line-height:1.3}.day .event-icon{width:33px;height:33px;margin-bottom:10px}.day .day-date{font-family:var(--font-detail);font-size:10px;letter-spacing:.18em}.day .engraved-divider{margin:15px auto}.day-frame>h2{font-size:clamp(36px,4.5vw,62px)}
 @media(max-width:650px){.day{padding:40px 16px}.day-frame{padding:28px 12px 30px}.day-frame>h2{font-size:39px;margin-bottom:18px}.day .day-intro{font-size:20px}.day #chapel:has(img){width:calc(100% + 12px);margin:15px -6px 12px;max-width:none}.day .program>div{padding:12px 4px;grid-template-columns:30px 1fr;column-gap:12px}.day .program h3{font-size:22px;margin:0 0 3px}.day .program p{font-size:17px}.day .event-icon{width:28px;height:28px;margin:0}.day .day-date{font-size:9px;line-height:1.7;letter-spacing:.14em}.day .venue-caption{font-size:21px}}
@@ -61,3 +61,9 @@ body,body *{font-family:var(--font-editorial)}
 .skip:not(:focus){width:1px;height:1px;padding:0;overflow:hidden;clip-path:inset(50%)}
 /* Acuarelas verticales suaves y figurines integrados en el papel. */
 .dress .attire-split .watercolor-palette{justify-items:center;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 8px;min-height:205px;margin-top:24px;align-content:center}.dress .watercolor-palette .swatch{width:100%;max-width:42px}.dress .watercolor-palette .swatch i{width:100%;aspect-ratio:1/2.5;mask:url('assets/acuarela-vertical.webp') center/contain no-repeat;-webkit-mask:url('assets/acuarela-vertical.webp') center/contain no-repeat;opacity:.55;transform:rotate(-2deg)}.dress .watercolor-palette .swatch:nth-child(2n) i{transform:rotate(2deg)}.dress .attire-men .watercolor-palette .swatch i{opacity:.5}.attire-single img{opacity:.55;filter:saturate(.22) contrast(.9);mix-blend-mode:multiply}@media(max-width:650px){.dress .attire-split .watercolor-palette{gap:9px 5px;min-height:155px;margin-top:18px}.dress .watercolor-palette .swatch{max-width:31px}.dress .watercolor-palette .swatch i{aspect-ratio:1/2.5}}
+
+/* Sello único: el relieve pertenece a la imagen, sin capas ni círculos CSS. */
+.cover .monogram.seal{display:flex;align-items:center;justify-content:center;width:108px;height:108px;min-height:0;flex-shrink:0;margin:20px 0 30px;background:transparent;border:0;border-radius:0;box-shadow:none;isolation:auto}
+.cover .monogram.seal:before,.cover .monogram.seal:after{content:none;display:none}
+.cover .monogram.seal img{display:block;width:100%;height:100%;max-width:none;max-height:none;object-fit:contain;opacity:1;filter:none;mix-blend-mode:normal;border:0;box-shadow:none}
+@media(max-width:650px){.cover .monogram.seal{width:100px;height:100px;margin:18px 0 28px}}
