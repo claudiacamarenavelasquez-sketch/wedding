@@ -90,9 +90,46 @@ body{font-optical-sizing:auto}.cover h1{font-size:clamp(42px,6.5vw,88px);letter-
 @font-face{font-family:'Montserrat';src:url('assets/fonts/montserrat-latin-300-normal.woff2') format('woff2');font-weight:300;font-style:normal;font-display:swap}
 .cover h1,.cover h1 span,.cover h1 em{font-family:'Bodoni Moda',serif;font-weight:400}.cover h1{display:flex;flex-direction:column;align-items:center;width:100%;max-width:none;font-size:clamp(64px,8vw,110px);line-height:1.02;letter-spacing:-.055em;margin:5px 0 30px}.cover h1 span{display:block}.cover h1 em{font-size:.55em;font-style:italic;line-height:1;margin:10px 0 13px}.cover .edition{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:18px;line-height:1.5;letter-spacing:.14em;margin-bottom:18px}.cover .eyebrow:not(.edition){font-family:'Cinzel',serif;font-weight:400;font-size:12px;line-height:1.9;letter-spacing:.15em;max-width:440px}.cover .scroll-cue,.cover .scroll-cue span{font-family:'Montserrat',sans-serif;font-weight:300}.cover .scroll-cue{font-size:11px;line-height:1.7;letter-spacing:.13em}.cover .scroll-cue span{font-size:23px}@media(max-width:650px){.cover h1{font-size:clamp(47px,13vw,68px);line-height:1.02;margin-bottom:25px}.cover h1 em{font-size:.55em;margin:9px 0 12px}.cover .edition{font-size:13px;letter-spacing:.09em;margin-bottom:16px}.cover .eyebrow:not(.edition){font-size:9px;letter-spacing:.1em;max-width:255px;line-height:1.9}.cover .scroll-cue{font-size:9px;letter-spacing:.09em}.cover .scroll-cue span{font-size:21px}}
 
-/* Italiana en el cuerpo; la portada conserva sus familias elegidas. */
-@font-face{font-family:'Italiana';src:url('assets/fonts/italiana-latin-400-normal.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
-:root{--font-editorial:'Italiana',serif}
 /* Apertura integrada al recorrido, a pantalla completa sin franjas laterales. */
 .intro{position:relative;inset:auto;z-index:auto;width:100%;height:100svh;height:100dvh;overflow:hidden}
 .intro #film{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;filter:blur(.4px);transform:scale(1.003)}
+
+/* Bodoni restaurada y escala de lectura más discreta. */
+:root{--font-editorial:'Bodoni Moda',serif}
+.cover h1{font-size:clamp(58px,7.2vw,99px)}
+.cover .edition{font-size:16px}
+.story h2{font-size:clamp(32px,3.8vw,59px)}
+.story-end{font-size:clamp(21px,2.1vw,30px)}
+.day-frame>h2{font-size:clamp(32px,4vw,56px)}
+.day .day-intro .venue-caption{font-size:19px}
+.day .day-intro h3{font-size:21px}
+.day .day-intro .venue-full-name{font-size:16px}
+.day .program h3{font-size:20px}.day .program p{font-size:16px}
+.dress h2{font-size:clamp(32px,3.6vw,54px)}
+.dress-copy>p:first-of-type{font-size:20px}
+.attire-split h3{font-size:19px}.attire-split article>p{font-size:20px}
+.gift-paper h2{font-size:clamp(27px,3.1vw,41px)}
+.gift-intro,.gift-holder,.gift-link-intro{font-size:18px}
+.gift-bank dt{font-size:18px}.gift-bank dd{font-size:clamp(16px,4.5vw,20px)}
+.rsvp-heading>h2{font-size:clamp(28px,3vw,41px)}
+.reserved-details h3{font-size:22px}.reserved-details #guest-name{font-size:18px}
+.reserved-intro,.reserved-message{font-size:18px}
+.reserved-details .seats span:first-child{font-size:55px}
+.rsvp .rsvp-paper .radio{font-size:18px}.rsvp .rsvp-paper legend{font-size:19px}
+.rsvp .rsvp-paper label{font-size:18px}
+.rsvp .rsvp-paper input:not([type=radio]),.rsvp .rsvp-paper select{font-size:18px}
+.rsvp .rsvp-paper #form-status{font-size:18px}
+.day .venue #maps,.gift-content .button,.rsvp .rsvp-paper #submit-rsvp{font-size:15px}
+@media(max-width:650px){
+.cover h1{font-size:clamp(43px,11.7vw,61px)}.cover .edition{font-size:12px}
+.story h2{font-size:clamp(30px,7.9vw,39px)}.story-end{font-size:23px}
+.day-frame>h2{font-size:35px}.day .day-intro .venue-caption{font-size:18px}
+.day .day-intro h3{font-size:19px}.day .day-intro .venue-full-name{font-size:14px}
+.day .program h3{font-size:18px}.day .program p{font-size:15px}
+.dress h2{font-size:33px}.dress-copy>p:first-of-type{font-size:18px}
+.attire-split h3{font-size:16px}.attire-split article>p{font-size:17px}
+.gift-paper h2{font-size:27px}.gift-intro,.gift-holder,.gift-link-intro{font-size:17px}
+.rsvp-heading>h2{font-size:28px}.reserved-details h3{font-size:21px}
+.reserved-details .seats span:first-child{font-size:51px}
+.day .venue #maps,.gift-content .button,.rsvp .rsvp-paper #submit-rsvp{font-size:14px}
+}
