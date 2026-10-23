@@ -42,10 +42,12 @@ Importar el repositorio, elegir preset **Other**, sin comando de build ni instal
 
 ## Actualización de dirección de arte
 
-Se retiró el rótulo vertical de portada. La capilla se acompaña de un marco doble de papelería, separadores e iconos lineales para el programa. `assets/anturio-editorial.png` es una naturaleza muerta decorativa generada para esta invitación; no representa el lugar ni a los novios. Se usa en Regalos y Lugares reservados para aportar profundidad visual con la paleta burgundy.
+Se retiró el rótulo vertical de portada. La capilla se acompaña de un marco doble de papelería, separadores e iconos lineales para el programa. `assets/anturio-editorial.png` es una naturaleza muerta decorativa generada para esta invitación; no representa el lugar ni a los novios. Se conserva como recurso disponible, pero no se muestra en Regalos ni Lugares reservados: ambas escenas utilizan papelería sobria, sin fotografías de fondo.
 
 La composición actual incorpora editorial.css, foto a pantalla completa, detalles botánicos, papelería en la sección de detalles y formulario con doble marco. Se eliminaron los rótulos de capítulos numerados.
 
 ## Ajustes finales solicitados
 
 Se eliminó la escena independiente de detalles (Nos encontramos en Lima); la ubicación permanece junto a la capilla. Dress code reproduce la composición de la referencia: seis tonos sugeridos configurables, ilustraciones de moda decorativas generadas, vestido largo o midi elegante, traje en tonos neutros e indicación de evitar blanco, ivory y burgundy.
+
+Regalos usa fondo marfil y un monograma pequeño. Lugares reservados usa burgundy liso, dos líneas finas y la cantidad asignada como protagonista.
