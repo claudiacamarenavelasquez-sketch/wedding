@@ -14,9 +14,9 @@ const assert = require('node:assert/strict');
   assert(sizes.names.bottom<sizes.invite.y,`cover overlap at ${width}`);
   assert(sizes.invite.bottom<sizes.cover.bottom,`invitation clipped at ${width}`);
   if(width>=900){
-   assert(sizes.cover.width>=Math.min(width*.8,1040),`narrow desktop cover ${width}`);
-   assert(sizes.cover.height<=1040,`excessive cover height ${width}`);
-   assert(sizes.dress.width>=Math.min(width*.7,1000),`narrow dress card ${width}`);
+   assert(sizes.cover.width>=width*.88,`narrow desktop cover ${width}`);
+   assert(sizes.cover.height<=950,`excessive cover height ${width}`);
+   assert(sizes.dress.width>=width*.88,`narrow dress card ${width}`);
    assert(parseFloat(sizes.storyFont)>=40);
   }else if(width<=650)assert.equal(sizes.storyFont,'30px');
   for(const selector of ['#celebracion','.dress','.gifts','.rsvp','footer']){

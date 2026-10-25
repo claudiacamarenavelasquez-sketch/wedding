@@ -84,3 +84,48 @@
 @media (min-width: 651px) and (max-width: 899px) {
   .cover .cover-border { max-width: 720px; height: clamp(820px, 105svh, 1050px); min-height: 0; aspect-ratio: auto; }
 }
+
+/* Pantallas amplias y zoom: ocupar el espacio real de la ventana, sin techo fijo. */
+@media (min-width: 900px) {
+  .cover, .dress, .gifts, .rsvp, .day { padding: 40px 4vw; }
+  .cover .cover-border {
+    width: 100%; max-width: none;
+    height: calc(100svh - 80px); min-height: 820px;
+  }
+  .cover .monogram.embroidery { width: clamp(100px, 12svh, 180px); height: 15%; top: 3%; }
+  .cover .cover-blessing { font-size: clamp(16px, 1.9svh, 28px); }
+  .cover .cover-parents p { font-size: clamp(22px, 2.7svh, 38px); }
+  .cover .cover-us { font-size: clamp(15px, 1.8svh, 26px); }
+  .cover h1 { font-size: clamp(92px, 11svh, 180px); }
+  .cover .eyebrow.cover-invitation { font-size: clamp(16px, 1.9svh, 28px); }
+
+  .day .day-frame, .dress-stationery, .gift-paper, .rsvp-paper { width: 100%; max-width: none; }
+  .day #chapel:has(img) { width: 70%; max-width: 1200px; }
+  .day #chapel img { max-height: 65svh; }
+  .day-frame > h2, .dress h2, .gift-paper h2 { font-size: clamp(46px, 3.5vw, 72px); }
+  .day .day-intro .venue-caption { font-size: clamp(25px, 1.8vw, 36px); }
+  .day .program { width: 80%; max-width: none; }
+  .day .program h3 { font-size: clamp(20px, 1.5vw, 30px); }
+  .day .program p { font-size: clamp(15px, 1.1vw, 22px); }
+  .day .day-date, .day .day-location .venue-full-name { font-size: clamp(15px, 1.1vw, 22px); }
+  .day .day-location h3 { font-size: clamp(20px, 1.5vw, 30px); }
+
+  .dress .attire-split { width: 85%; margin-left: auto; margin-right: auto; }
+  .attire-single { width: min(100%, 24vw); max-width: 360px; }
+  .dress .dress-invitation, .attire-split article > p { font-size: clamp(22px, 1.6vw, 32px); }
+  .attire-split h3 { font-size: clamp(23px, 1.7vw, 34px); }
+  .dress .dress-exclusions { font-size: clamp(20px, 1.5vw, 30px); }
+
+  .gift-content { width: 85%; max-width: none; }
+  .gift-intro, .gift-link-intro, .gift-bank dt, .gift-bank dd { font-size: clamp(22px, 1.6vw, 32px); }
+  .gift-bank { max-width: none; }
+  .gift-bank .gift-bank-title { font-size: clamp(17px, 1.2vw, 24px); }
+  .gift-bank .gift-holder { font-size: clamp(19px, 1.4vw, 28px); }
+  .gift-bank .gift-holder span { font-size: clamp(25px, 1.8vw, 36px); }
+  .gift-content #gift-list { width: 60%; max-width: 700px; font-size: clamp(15px, 1.1vw, 22px); }
+
+  .rsvp-heading > h2 { font-size: clamp(40px, 2.8vw, 56px); }
+  .reserved-details #guest-name { font-size: clamp(27px, 1.9vw, 38px); }
+  .reserved-intro, .rsvp .rsvp-paper .radio { font-size: clamp(23px, 1.6vw, 32px); }
+  .rsvp .rsvp-paper #submit-rsvp, .day .venue #maps { font-size: clamp(16px, 1.1vw, 22px); }
+}
