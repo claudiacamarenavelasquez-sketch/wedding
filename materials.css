@@ -261,3 +261,29 @@ footer .footer-cypresses{width:clamp(190px,26vw,350px);height:78%;right:-45px;bo
 .gift-button-arrow{font-size:19px}
 #gift-details{font-size:16px}
 @media(max-width:650px){.gift-paper h2{font-size:25px}.gift-intro,.gift-holder,.gift-link-intro{font-size:15px}.gift-bank .gift-bank-title,.gift-bank dt,.gift-bank dd,.gift-bank .gift-holder{font-size:12px}}
+
+/* Regalos: composición de papelería con marco, encaje y flores discretas. */
+.gift-paper{padding:70px 55px 150px;background-color:#f6eee2;isolation:isolate}
+.gift-paper:before{top:-8px;height:52px;background-size:auto 64px;opacity:.85;z-index:2}
+.gift-paper:after{inset:20px;border:1px solid #7c3437;border-radius:18px;outline:1px solid #7c343780;outline-offset:4px;z-index:0}
+.gift-branch{display:flex;align-items:center;justify-content:center;gap:20px;color:#7c3437;margin:0 0 20px;z-index:1}
+.gift-branch svg{width:54px;height:54px}.gift-branch span{width:65px;height:1px;background:#a77b6c}
+.gift-paper h2{font-size:clamp(32px,4.4vw,57px);line-height:1.12;margin-bottom:28px}
+.gift-paper h2 em{font-style:italic}
+.gift-intro{font-size:18px;line-height:1.5;margin-bottom:28px}
+.gift-bank{border:0;padding:0;margin:0 auto 28px}
+.gift-bank-icon{width:30px;height:30px;margin-bottom:9px}
+.gift-bank .gift-bank-title{font-size:13px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:18px}
+.gift-bank dt,.gift-bank dd{font-size:18px}
+.gift-bank dl>div{margin-bottom:8px}
+.gift-bank .gift-holder{font-size:16px;margin-top:20px;line-height:1.6}
+.gift-bank .gift-holder span{font-size:20px}
+.gift-divider{width:155px;margin:24px auto;background:#ad8272}
+.gift-link-intro{font-size:18px;line-height:1.5}
+.gift-content #gift-list{width:min(100%,420px);min-height:56px;border:1px solid #f4ede3;outline:1px solid #641a23;outline-offset:3px;border-radius:12px;background:linear-gradient(110deg,#501019,#6a1b23,#501019);color:#fff5e6;font-size:13px;letter-spacing:.14em;gap:18px;padding:14px 38px}
+.gift-content #gift-list:hover{background:#702630}
+.gift-content #gift-list .gift-button-icon{width:24px;height:24px;padding-right:12px;box-sizing:content-box;border-right:1px solid #f4ede399}
+.gift-content #gift-list .gift-button-arrow{right:17px;color:inherit}
+.gift-paper .gift-anthurium{position:absolute;width:170px;height:185px;object-fit:contain;left:-35px;right:auto;bottom:-32px;transform:rotate(-25deg);opacity:.6;filter:saturate(.65);mix-blend-mode:multiply;mask-image:linear-gradient(to top,#000 55%,transparent);z-index:0}
+.gift-paper .gift-anthurium-secondary{width:115px;height:140px;left:100px;bottom:-45px;transform:rotate(18deg);opacity:.48}
+@media(max-width:650px){.gift-paper{padding:60px 28px 125px}.gift-paper:after{inset:14px;border-radius:14px;outline-offset:3px}.gift-paper:before{height:38px;background-size:auto 48px}.gift-branch{gap:14px;margin-bottom:20px}.gift-branch svg{width:43px;height:43px}.gift-branch span{width:40px}.gift-paper h2{font-size:31px}.gift-intro{font-size:15px}.gift-bank .gift-bank-title{font-size:11px;letter-spacing:.08em}.gift-bank dt,.gift-bank dd{font-size:14px}.gift-bank .gift-holder{font-size:14px}.gift-bank .gift-holder span{font-size:17px}.gift-link-intro{font-size:15px}.gift-content #gift-list{font-size:11px;letter-spacing:.09em;gap:12px;min-height:50px;padding:12px 27px}.gift-content #gift-list .gift-button-icon{width:20px;height:20px;padding-right:10px}.gift-paper .gift-anthurium{width:125px;height:145px;left:-25px;bottom:-27px}.gift-paper .gift-anthurium-secondary{width:90px;height:110px;left:75px;bottom:-35px}}
