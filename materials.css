@@ -302,3 +302,9 @@ footer .footer-cypresses{width:clamp(190px,26vw,350px);height:78%;right:-45px;bo
 .gift-bank .copy-bank{order:-1;display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;padding:3px;border:1px solid #a77b6c55;border-radius:4px;background:#fffaf32b}
 .gift-bank .copy-bank svg{width:16px;height:16px}
 .gift-bank .copy-bank:hover{background:#a77b6c12;border-color:#a77b6c}
+
+/* Copia discreta junto al número, elevada como un superíndice. */
+.gift-bank dd{flex-direction:row;align-items:baseline;gap:3px}
+.gift-bank .copy-bank{order:0;position:relative;top:-.55em;display:inline-flex;width:14px;height:14px;min-width:0;padding:0;border:0;border-radius:0;background:transparent;flex-shrink:0;line-height:1}
+.gift-bank .copy-bank svg{width:12px;height:12px}
+.gift-bank .copy-bank:hover{background:transparent;border:0;color:#7c3437}
