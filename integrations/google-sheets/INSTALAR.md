@@ -68,3 +68,13 @@ El script valida los cupos en servidor, busca una sola familia por token, serial
 ## Si falla la selección de una fila
 
 Actualiza Code.gs con la versión 3. Guarda, ejecuta `prepararRSVP` y luego selecciona `generarEnlacesFaltantes` en Apps Script y pulsa Ejecutar. Esta función no depende de la celda activa ni de la pestaña seleccionada: reconoce la lista por los encabezados Invitados/Pases. En la lista de la pareja los enlaces se escriben en F. Conserva los enlaces que ya existen, por lo que se puede volver a ejecutar para nuevos invitados. Las filas sin nombre o con pases inválidos se omiten y se indican en el resumen. Si hay más de una lista con esos encabezados, se detiene para no elegir otra por accidente. Publica una nueva versión de la implementación al terminar.
+
+
+## Enlaces cortos (actualización)
+
+1. Reemplaza todo el código del editor por la versión actual de `Code.gs` y guarda. Conserva las propiedades del script y la base ya creada.
+2. En **Implementar → Administrar implementaciones → Editar (lápiz)** elige **Nueva versión** y pulsa **Implementar**. Actualiza la implementación existente para conservar la misma URL `/exec` y la configuración de Vercel.
+3. Una vez publicada la web actualizada, ejecuta **`acortarEnlacesExistentes`** desde el editor de Apps Script. También está en el menú **Invitaciones → Acortar enlaces existentes (conservar anteriores)** tras recargar la hoja.
+4. La columna **Enlace** tendrá el formato `https://claudiayjorge.vercel.app/i/` seguido de 24 caracteres. Los enlaces largos ya enviados siguen funcionando, y se conservan los pases y respuestas.
+
+`generarEnlacesFaltantes` crea enlaces cortos para nuevas filas. No ejecutes `generarEnlaceSeleccionado` para acortar: esa función renueva y revoca el enlace anterior. La función de acortar es segura de repetir; no modifica nombres ni cupos. La correspondencia de enlaces antiguos se guarda en las propiedades del mismo proyecto de Apps Script; consérvalas.

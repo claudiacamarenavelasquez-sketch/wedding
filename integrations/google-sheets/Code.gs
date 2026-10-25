@@ -17,6 +17,7 @@ function onOpen() {
     .addItem('Preparar y generar todos los enlaces', 'iniciarRSVP')
     .addItem('Preparar hojas RSVP', 'prepararRSVP')
     .addItem('Generar enlaces faltantes para toda la lista', 'generarEnlacesFaltantes')
+    .addItem('Acortar enlaces existentes (conservar anteriores)', 'acortarEnlacesExistentes')
     .addItem('Generar o renovar enlace de la fila seleccionada', 'generarEnlaceSeleccionado')
     .addToUi();
 }
@@ -166,9 +167,9 @@ function writeGuestLink_(layout, row, allGuests, website) {
   if (!validGuest_(values)) throw new Error('La fila ' + row + ' necesita nombre y pases enteros entre 1 y 100.');
   const id = values[0] ? String(values[0]) : Utilities.getUuid();
   if (allGuests.some((guest, index) => index + 2 !== row && String(guest[0]) === id)) throw new Error('ID duplicado en la fila ' + row + '. No se cambió ese enlace.');
-  const token = hash_(Utilities.getUuid() + Utilities.getUuid());
+  const token = hash_(Utilities.getUuid() + Utilities.getUuid()).slice(0, 24);
   layout.sheet.getRange(row, layout.idColumn).setValue(id);
-  layout.sheet.getRange(row, layout.tokenColumn, 1, 2).setValues([[hash_(token), website + '/#invite=' + token]]);
+  layout.sheet.getRange(row, layout.tokenColumn, 1, 2).setValues([[hash_(token), website + '/i/' + token]]);
   values[0] = id;
 }
 
@@ -226,6 +227,40 @@ function generarEnlacesFaltantes() {
 // Comprobación pública sin datos de invitados.
 function doGet() { return json_({ ok: true, service: 'wedding-rsvp', version: 4 }); }
 
+/** Convierte los enlaces largos sin invalidar los ya enviados ni modificar respuestas.
+ * Ejecutar después de actualizar la implementación web del mismo proyecto.
+ */
+function acortarEnlacesExistentes() {
+  const lock = LockService.getScriptLock();
+  lock.waitLock(20000);
+  try {
+    const book = rsvpBook_();
+    const layout = guestLayout_(book, false);
+    const rows = guestRows_(layout);
+    const props = PropertiesService.getScriptProperties();
+    let shortened = 0, kept = 0;
+    rows.forEach((guest, index) => {
+      const link = String(guest[4] || '');
+      if (/\/i\/[a-f0-9]{24}$/.test(link)) { kept++; return; }
+      const match = /#invite=([a-f0-9]{64})$/.exec(link);
+      if (!match || hash_(match[1]) !== String(guest[3])) return;
+      const shortToken = match[1].slice(0, 24);
+      const aliasHash = hash_(shortToken);
+      const key = 'SHORT_' + aliasHash;
+      const existing = props.getProperty(key);
+      if ((existing && existing !== String(guest[3])) || rows.some(other => String(other[3]) === aliasHash)) {
+        throw new Error('Conflicto de enlace corto en fila ' + (index + 2) + '. No se cambió esa fila.');
+      }
+      props.setProperty(key, String(guest[3]));
+      layout.sheet.getRange(index + 2, layout.tokenColumn + 1).setValue(weddingUrl_() + '/i/' + shortToken);
+      shortened++;
+    });
+    SpreadsheetApp.flush();
+    book.toast('Enlaces acortados: ' + shortened + '. Cortos conservados: ' + kept + '. Los anteriores siguen funcionando.');
+    return { shortened: shortened, kept: kept };
+  } finally { lock.releaseLock(); }
+}
+
 function doPost(event) {
   const lock = LockService.getScriptLock();
   let locked = false;
@@ -236,7 +271,7 @@ function doPost(event) {
     const key = PropertiesService.getScriptProperties().getProperty('API_KEY');
     if (!key || key.length < 32) return failure_('NOT_CONFIGURED');
     if (!request || typeof request !== 'object' || Array.isArray(request) || !same_(request.apiKey, key)) return failure_('UNAUTHORIZED');
-    if (!['lookup', 'save'].includes(request.action) || !/^[a-f0-9]{64}$/.test(request.token || '')) return failure_('INVALID_REQUEST');
+    if (!['lookup', 'save'].includes(request.action) || !/^(?:[a-f0-9]{24}|[a-f0-9]{64})$/.test(request.token || '')) return failure_('INVALID_REQUEST');
     if (Object.keys(request).some(k => !['apiKey', 'action', 'token', 'response'].includes(k))) return failure_('INVALID_REQUEST');
     locked = lock.tryLock(20000);
     if (!locked) return failure_('BUSY');
@@ -245,7 +280,8 @@ function doPost(event) {
     const guests = layout.sheet;
     const responses = layout.existing ? guests : book.getSheetByName(RESPONSE_TAB);
     if (!layout.existing) checkHeaders_(responses, RESPONSE_HEADERS);
-    const digest = hash_(request.token);
+    const tokenDigest = hash_(request.token);
+    const digest = PropertiesService.getScriptProperties().getProperty('SHORT_' + tokenDigest) || tokenDigest;
     const rows = guestRows_(layout);
     const matches = rows.filter(row => same_(String(row[3]), digest));
     if (matches.length !== 1) return failure_('INVALID_INVITATION');

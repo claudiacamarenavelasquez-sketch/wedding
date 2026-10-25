@@ -81,8 +81,8 @@ if (wedding.assets.video) {
   }
 }
 let invitation;
-// Fragment tokens avoid sending invitation identifiers to static hosting logs.
-const token = new URLSearchParams(location.hash.slice(1)).get('invite');
+// Aceptar los enlaces cortos y conservar los enlaces privados anteriores.
+const token = /^\/i\/([a-f0-9]{24}|[a-f0-9]{64})\/?$/.exec(location.pathname)?.[1] || new URLSearchParams(location.hash.slice(1)).get('invite');
 const demo = wedding.rsvp.mode === 'demo' || (wedding.rsvp.mode === 'auto' && !token);
 async function api(method, data) { const response = await fetch(wedding.rsvp.endpoint, { method, headers: { Authorization: `Bearer ${token}`, ...(data ? {'Content-Type':'application/json'} : {}) }, ...(data ? { body: JSON.stringify(data) } : {}), cache: 'no-store', credentials: 'same-origin', referrerPolicy: 'no-referrer' }); if (!response.ok) throw new Error(response.status === 401 || response.status === 404 ? 'No pudimos validar tu invitación. Contacta a los novios.' : 'No se pudo completar la solicitud. Inténtalo nuevamente.'); return response.json(); }
 function renderNames(values = []) {
