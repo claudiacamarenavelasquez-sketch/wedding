@@ -9,10 +9,10 @@ const assert = require('node:assert/strict');
   await page.evaluate(() => document.querySelector('#historia').scrollIntoView({behavior:'instant'}));
   if (reducedMotion === 'no-preference') {
    await page.waitForFunction(() => document.querySelector('#historia').classList.contains('story-started'));
-   await page.waitForTimeout(1400);
+   await page.waitForTimeout(1100);
    assert.equal(await page.locator('.story-copy').evaluate(e=>getComputedStyle(e).opacity),'1');
    assert.equal(await page.locator('.story-end').evaluate(e=>getComputedStyle(e).opacity),'0');
-   await page.waitForTimeout(2900);
+   await page.waitForTimeout(900);
   }
   assert.equal(await page.locator('.story-end').evaluate(e=>getComputedStyle(e).opacity),'1');
   await page.close();

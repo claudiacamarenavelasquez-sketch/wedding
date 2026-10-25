@@ -14,8 +14,6 @@ if (wedding.giftRegistryUrl) {
     if (giftUrl.protocol === 'https:') {
       $('gift-list').href = giftUrl.href;
       $('gift-list').hidden = false;
-      $('gift-list-pending').hidden = true;
-      $('gift-pending-note').hidden = true;
     }
   } catch { /* Mantener el botón sin enlace hasta tener una URL válida. */ }
 }

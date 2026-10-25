@@ -213,7 +213,7 @@ footer>.eyebrow{font-family:var(--font-editorial);font-size:14px;letter-spacing:
 @media(prefers-reduced-motion:no-preference){
 .js-motion .story .story-copy,.js-motion .story .story-end{opacity:0;transform:translateY(10px)}
 .js-motion .story.story-started .story-copy{animation:story-text-arrive .9s ease .15s both}
-.js-motion .story.story-started .story-end{animation:story-text-arrive .9s ease 3.2s both}
+.js-motion .story.story-started .story-end{animation:story-text-arrive .7s ease 1.2s both}
 }
 @keyframes story-text-arrive{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 
@@ -251,3 +251,13 @@ footer .footer-cypresses{width:clamp(190px,26vw,350px);height:78%;right:-45px;bo
 
 /* Mantener el papel marfil y la tinta burdeos con el sistema en modo oscuro. */
 :root{color-scheme:only light}
+
+/* Ajustes finales de portada y escala más pequeña en Regalos. */
+.cover .eyebrow:not(.edition){max-width:100%;text-align:center}
+.gift-paper h2{font-size:clamp(25px,3.1vw,39px)}
+.gift-intro,.gift-holder,.gift-link-intro{font-size:16px}
+.gift-bank .gift-bank-title,.gift-bank dt,.gift-bank dd,.gift-bank .gift-holder{font-size:14px}
+.gift-content #gift-list{font-size:9px}
+.gift-button-arrow{font-size:19px}
+#gift-details{font-size:16px}
+@media(max-width:650px){.gift-paper h2{font-size:25px}.gift-intro,.gift-holder,.gift-link-intro{font-size:15px}.gift-bank .gift-bank-title,.gift-bank dt,.gift-bank dd,.gift-bank .gift-holder{font-size:12px}}
