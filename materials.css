@@ -308,3 +308,8 @@ footer .footer-cypresses{width:clamp(190px,26vw,350px);height:78%;right:-45px;bo
 .gift-bank .copy-bank{order:0;position:relative;top:-.55em;display:inline-flex;width:14px;height:14px;min-width:0;padding:0;border:0;border-radius:0;background:transparent;flex-shrink:0;line-height:1}
 .gift-bank .copy-bank svg{width:12px;height:12px}
 .gift-bank .copy-bank:hover{background:transparent;border:0;color:#7c3437}
+
+/* Regalos sin flores: encaje fino enmarca el papel. */
+.gift-paper{padding:75px 60px 85px;background:#f4ede3 url('assets/papel-encaje-fino.webp') center/100% 100% no-repeat}
+.gift-paper:before,.gift-paper:after{display:none;content:none}
+@media(max-width:650px){.gift-paper{padding:65px 28px 80px 42px}}
