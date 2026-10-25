@@ -353,3 +353,19 @@ footer .footer-cypresses{width:clamp(190px,26vw,350px);height:78%;right:-45px;bo
 #celebracion{background:rgb(49,9,15)}
 #celebracion .day-frame{background:#f4ede3}
 @media(max-width:650px){.cover .cover-border{padding-bottom:48px}.cover .cover-parents p{font-size:13px}.cover h1{font-size:calc(clamp(42px,12vw,62px) + 2px)}.cover .cover-main{padding:20px 0 32px}.cover .cover-invitation{margin-bottom:6px}}
+
+/* Ritmo compacto de portada: familias alineadas y menos espacios entre textos. */
+.cover .cover-main{flex:0;padding:0;margin-top:45px}
+.cover .cover-blessing{margin-bottom:6px}
+.cover .cover-parents{align-items:start;margin-bottom:24px}
+.cover .cover-parents>div{display:grid;grid-template-rows:auto auto;gap:0}
+.cover .cover-parents p{margin:0;line-height:1.6}
+.cover .cover-us{margin-bottom:13px}
+.cover .cover-invitation{display:flex;align-items:center;justify-content:center;width:170px;max-width:170px;min-height:120px;margin:18px 0 6px;line-height:1.8}
+@media(max-width:650px){.cover .cover-main{margin-top:75px;padding:0}.cover .cover-blessing{margin-bottom:6px}.cover .cover-parents{margin-bottom:24px}.cover .cover-invitation{margin-top:16px;min-height:120px}}
+.cover .cover-invitation{display:block;padding:40px 0;box-sizing:border-box}
+.cover .cover-parents>div{display:contents}
+.cover .cover-parents>div:first-child p{grid-column:1;text-align:center}
+.cover .cover-parents>div:last-child p{grid-column:2;text-align:center}
+.cover .cover-parents>div p:first-child{grid-row:1}
+.cover .cover-parents>div p:last-child{grid-row:2}
