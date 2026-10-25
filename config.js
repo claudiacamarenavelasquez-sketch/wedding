@@ -10,7 +10,7 @@ export const wedding = {
   guestPalette: [
     { name: 'Salvia', hex: '#798169' },
     { name: 'Oliva', hex: '#535b32' },
-    { name: 'Azul petróleo', hex: '#193e46' },
+    { name: 'Ciruela', hex: '#4a314f' },
     { name: 'Rosa empolvado', hex: '#bf907d' },
     { name: 'Camel', hex: '#b2875c' },
     { name: 'Chocolate', hex: '#69472f' }
