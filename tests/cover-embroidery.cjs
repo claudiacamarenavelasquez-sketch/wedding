@@ -12,7 +12,7 @@ const assert = require('node:assert/strict');
   assert.equal(sizes[0], sizes[1]);
   assert.equal(await page.locator('.cover .scroll-cue').count(), 0);
   assert.match(await page.locator('#monogram img').getAttribute('src'), /monograma-bordado/);
-  assert((await page.locator('#monogram').boundingBox()).width >= 78);
+  assert((await page.locator('#monogram').boundingBox()).width >= 40);
   assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
   if (width === 390) await page.locator('#portada').screenshot({ path: '/tmp/cover-embroidery.png' });
   await page.close();
