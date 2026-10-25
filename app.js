@@ -108,3 +108,22 @@ document.querySelectorAll('[name=attendance]').forEach(input => input.onchange =
 async function initRSVP() { try { if (!demo && !token) throw new Error('Abre el enlace privado de tu invitación para consultar tus lugares y confirmar.'); invitation = demo ? wedding.rsvp.demo : await api('GET'); if (!Number.isInteger(invitation.seats) || invitation.seats < 1 || invitation.seats > 100 || typeof invitation.name !== 'string') throw new Error('No se pudo validar la información de la invitación.'); $('guest').value = invitation.name; $('guest-name').textContent = invitation.name; $('seat-count').textContent = invitation.seats; $('seat-label').textContent = invitation.seats === 1 ? 'Lugar' : 'Lugares'; for (let n=1;n<=invitation.seats;n++) $('quantity').add(new Option(String(n),String(n))); $('quantity').value = String(invitation.seats); $('quantity-field').hidden = invitation.seats === 1; renderNames(); if (!demo) {  $('submit-rsvp').textContent = 'Confirmar asistencia'; const saved = invitation.response; if (saved) { const radio = document.querySelector(`[name=attendance][value="${saved.attending ? 'yes' : 'no'}"]`); radio.checked = true; if (saved.attending && Number.isInteger(saved.count) && saved.count >= 1 && saved.count <= invitation.seats) $('quantity').value = saved.count; renderNames(Array.isArray(saved.names) ? saved.names.slice(1) : []); syncAttendance(); } } } catch(error) { $('seat-count').textContent = '—'; $('guest-name').textContent = 'Invitación privada'; $('rsvp-form').querySelectorAll('input,select,textarea,button').forEach(el => el.disabled = true); $('form-status').textContent = error.message; $('mode-note').hidden = false; $('mode-note').textContent = 'No se han cargado los datos de la invitación.'; } }
 $('rsvp-form').onsubmit = async event => { event.preventDefault(); const attending = document.querySelector('[name=attendance]:checked')?.value === 'yes'; const count = attending ? Number($('quantity').value) : 0; if (!invitation || !Number.isInteger(count) || count < 0 || (attending && count < 1) || count > invitation.seats) { $('form-status').textContent = 'Selecciona una cantidad válida dentro de los lugares asignados.'; return; } const names = attending ? [invitation.name, ...[...$('names').querySelectorAll('input')].map(input => input.value.trim())] : []; if (attending && (names.length !== count || names.some(n => !n))) { $('form-status').textContent = 'Completa los nombres de los asistentes.'; return; } if (demo) { $('form-status').textContent = `Demostración: ${attending ? `${count} asistentes` : 'no asistirás'}. No se guardó ni envió ningún dato.`; return; } $('submit-rsvp').disabled = true; try { await api('PUT', { attending, count, names, message: '' }); $('form-status').textContent = 'Gracias. Tu confirmación se guardó correctamente. Puedes actualizarla desde este enlace.'; } catch(error) { $('form-status').textContent = error.message; } finally { $('submit-rsvp').disabled = false; } };
 initRSVP();
+
+// Copiar únicamente los dígitos, conservando los ceros iniciales del CCI.
+document.querySelectorAll('[data-copy]').forEach(button => {
+  button.addEventListener('click', async () => {
+    const source = $(button.dataset.copy);
+    const status = $('bank-copy-status');
+    try {
+      await navigator.clipboard.writeText(source.textContent.trim());
+      status.textContent = button.dataset.copy === 'bank-cci' ? 'CCI copiado.' : 'Número de cuenta copiado.';
+    } catch {
+      const selection = window.getSelection();
+      const range = document.createRange();
+      range.selectNodeContents(source);
+      selection.removeAllRanges();
+      selection.addRange(range);
+      status.textContent = 'Seleccionamos el número. Mantén pulsado y elige Copiar.';
+    }
+  });
+});

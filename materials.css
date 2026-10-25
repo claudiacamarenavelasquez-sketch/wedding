@@ -287,3 +287,18 @@ footer .footer-cypresses{width:clamp(190px,26vw,350px);height:78%;right:-45px;bo
 .gift-paper .gift-anthurium{position:absolute;width:170px;height:185px;object-fit:contain;left:-35px;right:auto;bottom:-32px;transform:rotate(-25deg);opacity:.6;filter:saturate(.65);mix-blend-mode:multiply;mask-image:linear-gradient(to top,#000 55%,transparent);z-index:0}
 .gift-paper .gift-anthurium-secondary{width:115px;height:140px;left:100px;bottom:-45px;transform:rotate(18deg);opacity:.48}
 @media(max-width:650px){.gift-paper{padding:60px 28px 125px}.gift-paper:after{inset:14px;border-radius:14px;outline-offset:3px}.gift-paper:before{height:38px;background-size:auto 48px}.gift-branch{gap:14px;margin-bottom:20px}.gift-branch svg{width:43px;height:43px}.gift-branch span{width:40px}.gift-paper h2{font-size:31px}.gift-intro{font-size:15px}.gift-bank .gift-bank-title{font-size:11px;letter-spacing:.08em}.gift-bank dt,.gift-bank dd{font-size:14px}.gift-bank .gift-holder{font-size:14px}.gift-bank .gift-holder span{font-size:17px}.gift-link-intro{font-size:15px}.gift-content #gift-list{font-size:11px;letter-spacing:.09em;gap:12px;min-height:50px;padding:12px 27px}.gift-content #gift-list .gift-button-icon{width:20px;height:20px;padding-right:10px}.gift-paper .gift-anthurium{width:125px;height:145px;left:-25px;bottom:-27px}.gift-paper .gift-anthurium-secondary{width:90px;height:110px;left:75px;bottom:-35px}}
+
+/* Copiar cuenta y CCI sin recargar visualmente los datos bancarios. */
+.gift-bank dd{display:flex;align-items:baseline;gap:7px;min-width:0}
+.gift-bank .copy-bank{font-family:var(--font-editorial);font-size:11px;line-height:1.4;letter-spacing:0;color:var(--wine);border:0;border-bottom:1px solid #a77b6c80;background:transparent;padding:5px 2px;cursor:pointer;flex-shrink:0}
+.gift-bank .copy-bank:hover{border-bottom-color:var(--wine)}
+#bank-copy-status{font-size:12px;line-height:1.4;margin:8px 0 0}
+#bank-copy-status:empty{display:none}
+@media(max-width:650px){.gift-bank dd{gap:5px}.gift-bank .copy-bank{font-size:10px}.gift-bank dl>div{gap:4px}}
+
+/* Íconos de copia pequeños, encima de cada número. */
+.gift-bank dl>div{align-items:flex-end;margin-bottom:12px}
+.gift-bank dd{flex-direction:column;align-items:flex-end;gap:3px}
+.gift-bank .copy-bank{order:-1;display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;padding:3px;border:1px solid #a77b6c55;border-radius:4px;background:#fffaf32b}
+.gift-bank .copy-bank svg{width:16px;height:16px}
+.gift-bank .copy-bank:hover{background:#a77b6c12;border-color:#a77b6c}
