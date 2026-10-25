@@ -10,14 +10,14 @@ export const wedding = {
   guestPalette: [
     { name: 'Salvia', hex: '#798169' },
     { name: 'Oliva', hex: '#535b32' },
-    { name: 'Gris', hex: '#808080' },
+    { name: 'Ciruela', hex: '#4a314f' },
     { name: 'Rosa empolvado', hex: '#bf907d' },
     { name: 'Camel', hex: '#b2875c' },
     { name: 'Chocolate', hex: '#69472f' }
   ],
   menPalette: [
-    { name: 'Negro', hex: '#191716' },
-    { name: 'Azul grisáceo', hex: '#26354c' },
+    { name: 'Negro', hex: '#000000' },
+    { name: 'Gris', hex: '#808080' },
     { name: 'Azul marino', hex: '#101e3c' }
   ],
   // auto: enlace privado => backend; enlace general => demostración explícita.
