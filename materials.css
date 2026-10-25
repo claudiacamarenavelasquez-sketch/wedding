@@ -387,3 +387,6 @@ footer .footer-cypresses{width:clamp(190px,26vw,350px);height:78%;right:-45px;bo
 
 .story #story-title{font-size:30px}
 .story .story-end{font-size:19px}
+
+/* Etiquetas compactas del cronograma, centradas y sin saltos de línea. */
+.day .program p{font-size:9px;white-space:nowrap;max-width:none;text-align:center}
