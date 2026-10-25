@@ -384,3 +384,6 @@ footer .footer-cypresses{width:clamp(190px,26vw,350px);height:78%;right:-45px;bo
 .cover .eyebrow.cover-invitation{position:absolute;top:77%;left:5%;width:90%;max-width:none;min-height:0;margin:0;padding:0;font-size:clamp(10px,2.3vw,12px);line-height:2.3;letter-spacing:.035em;text-align:center}
 @media(max-width:650px){.cover .cover-border{min-height:calc(100svh - 30px);padding:0}.cover h1 em{margin:11px 0 15px}}
 .cover .monogram.embroidery{width:22%;height:13%;top:3%}
+
+.story #story-title{font-size:30px}
+.story .story-end{font-size:19px}
