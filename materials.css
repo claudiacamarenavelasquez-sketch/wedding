@@ -313,3 +313,26 @@ footer .footer-cypresses{width:clamp(190px,26vw,350px);height:78%;right:-45px;bo
 .gift-paper{padding:75px 60px 85px;background:#f4ede3 url('assets/papel-encaje-fino.webp') center/100% 100% no-repeat}
 .gift-paper:before,.gift-paper:after{display:none;content:none}
 @media(max-width:650px){.gift-paper{padding:65px 28px 80px 42px}}
+
+/* Portada familiar: los nombres protagonizan y el bordado firma al pie. */
+.cover .cover-border{padding:75px 45px 60px}
+.cover-blessing{font-family:'Cinzel',serif;font-size:12px;line-height:1.8;letter-spacing:.11em;text-align:center;max-width:600px;margin:0 0 25px}
+.cover-parents{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:45px;width:100%;max-width:620px;margin:0 0 38px;text-align:center}
+.cover-parents p{font-family:var(--font-editorial);font-size:20px;line-height:1.5;margin:0}
+.cover-us{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.15em;text-transform:uppercase;margin:0 0 15px}
+.cover h1{flex-direction:row;justify-content:center;gap:20px;font-size:clamp(48px,6.4vw,90px);margin:0 0 28px}
+.cover h1>span,.cover h1>span:last-child{letter-spacing:-.045em}
+.cover h1 em{font-size:.6em;margin:0;line-height:1}
+.cover .cover-invitation{font-size:12px;line-height:1.9;letter-spacing:.11em;margin:0;text-align:center}
+.cover .monogram.embroidery{width:90px;height:100px;margin:24px 0 0}
+@media(max-width:650px){
+.cover .cover-border{padding:60px 22px 50px}
+.cover-blessing{font-size:10px;letter-spacing:.06em;line-height:1.9;max-width:270px;margin-bottom:23px}
+.cover-parents{gap:12px;margin-bottom:30px}
+.cover-parents p{font-size:14px;line-height:1.65}
+.cover-us{font-size:10px;margin-bottom:16px}
+.cover h1{flex-direction:column;gap:0;font-size:clamp(42px,12vw,62px);margin-bottom:25px}
+.cover h1 em{font-size:.5em;margin:8px 0 11px}
+.cover .cover-invitation{font-size:11px;letter-spacing:.07em}
+.cover .monogram.embroidery{width:78px;height:88px;margin-top:23px}
+}
