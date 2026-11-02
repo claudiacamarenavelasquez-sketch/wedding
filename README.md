@@ -73,7 +73,7 @@ materials.css unifica portada, dress code y RSVP con papel de algodón, encaje y
 ### Apps Script proporcionado
 
 Endpoint de implementación recibido de la pareja:
-`https://script.google.com/macros/s/AKfycbxGtWycHeMSAeszplBIiU_wfuCX9m8FVuEgNtvP7vsEtq6vElidYkR_K_i_JqpXaEEWgQ/exec`
+`https://script.google.com/macros/s/AKfycbxI9qiR24_O1ng66gGS9KZdwCNToXEmLvMevIPPmJPL58Y4ObWG6vx_uS-1hENuZvM/exec`
 
 La solicitud de lectura está bloqueada por el proxy de red (403 CONNECT); todavía no se conoce el contrato de entrada/salida ni se ha probado una escritura. Antes de conectar el formulario se debe revisar el código de Apps Script (doGet/doPost), el mapeo de columnas y la validación de cupos por identificador privado. No activar el modo real ni afirmar guardados sin respuesta verificable. No utilizar mode:no-cors para dar por confirmada una escritura cuya respuesta no pueda leerse.
 

@@ -92,4 +92,4 @@ Las cuentas BCP mostradas en la tarjeta son:
 - Dólares: 19114592696195; CCI 00219111459269619556.
 
 
-Implementación actual indicada por la pareja: `https://script.google.com/macros/s/AKfycbxGtWycHeMSAeszplBIiU_wfuCX9m8FVuEgNtvP7vsEtq6vElidYkR_K_i_JqpXaEEWgQ/exec`. Si `RSVP_SCRIPT_URL` está configurada en Vercel, actualizarla a esta misma URL y volver a desplegar. La API key debe coincidir con las propiedades del proyecto que sirve esta implementación.
+Implementación actual indicada por la pareja: `https://script.google.com/macros/s/AKfycbxI9qiR24_O1ng66gGS9KZdwCNToXEmLvMevIPPmJPL58Y4ObWG6vx_uS-1hENuZvM/exec`. Si `RSVP_SCRIPT_URL` está configurada en Vercel, actualizarla a esta misma URL y volver a desplegar. La API key debe coincidir con las propiedades del proyecto que sirve esta implementación.
