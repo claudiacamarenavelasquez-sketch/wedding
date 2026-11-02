@@ -90,3 +90,6 @@ La pestaña **Obsequios** se crea automáticamente al guardar el primer registro
 Las cuentas BCP mostradas en la tarjeta son:
 - Soles: 19329724584030; CCI 00219312972458403012.
 - Dólares: 19114592696195; CCI 00219111459269619556.
+
+
+Implementación actual indicada por la pareja: `https://script.google.com/macros/s/AKfycbxGtWycHeMSAeszplBIiU_wfuCX9m8FVuEgNtvP7vsEtq6vElidYkR_K_i_JqpXaEEWgQ/exec`. Si `RSVP_SCRIPT_URL` está configurada en Vercel, actualizarla a esta misma URL y volver a desplegar. La API key debe coincidir con las propiedades del proyecto que sirve esta implementación.
