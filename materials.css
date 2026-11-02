@@ -418,3 +418,12 @@ html:has(#gift-report-dialog[open]){overflow:hidden}
 #gift-report-dialog .gift-report-close{z-index:2;top:12px;right:12px;display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:#f4ede3e6;color:var(--wine);padding:0;font-size:23px;letter-spacing:0}
 #submit-gift-report{background:var(--wine);color:var(--ivory);border-color:var(--wine)}
 @media(max-width:650px){.gift-report-paper{padding-top:45px;padding-bottom:40px}.gift-report-intro{font-size:15px;margin-bottom:18px}#gift-report-form label{font-size:14px;margin-top:12px}#gift-report-form input,#gift-report-form select,#gift-report-form textarea{font-size:16px}#gift-report-form textarea{min-height:65px}.gift-report-note,#gift-report-status{font-size:12px;margin:14px 0}}
+
+/* Agradecimiento breve, solo tras una confirmación guardada. */
+#rsvp-thanks-dialog{width:calc(100% - 48px);max-width:360px;padding:30px 28px 26px;border:1px solid #b7aca8;border-radius:12px;outline:1px solid #f4ede3;outline-offset:4px;background:#f4ede3;color:var(--wine);text-align:center;box-shadow:0 15px 60px #21080e55}
+#rsvp-thanks-dialog::backdrop{background:#21080e99}
+#rsvp-thanks-title{font-size:28px;line-height:1.2;text-transform:none;margin:0 0 14px}
+#rsvp-thanks-message{font-size:18px;line-height:1.45;margin:0 0 22px}
+#rsvp-thanks-continue{border-radius:24px;background:var(--wine);color:var(--ivory);font-size:12px;padding:10px 24px;letter-spacing:.06em}
+html:has(#rsvp-thanks-dialog[open]){overflow:hidden}
+#despedida:focus{outline:none}

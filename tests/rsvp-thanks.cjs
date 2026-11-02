@@ -1,0 +1,51 @@
+const {chromium}=require('playwright');
+const assert=require('node:assert/strict');
+(async()=>{
+ const browser=await chromium.launch({executablePath:'/usr/bin/chromium',args:['--no-sandbox']});
+ const base=`http://127.0.0.1:${process.env.TEST_PORT||3000}`;
+ for(const width of [390,1440])for(const seats of [1,2]){
+  const page=await browser.newPage({viewport:{width,height:900},reducedMotion:'reduce'});
+  let release,fail=false,delay=true;
+  await page.route('**/api/invitation',async route=>{
+   if(route.request().method()==='GET')return route.fulfill({json:{name:'Invitado de prueba',seats}});
+   if(delay)await new Promise(resolve=>release=resolve);
+   await route.fulfill(fail?{status:503,json:{error:'SERVICE_UNAVAILABLE'}}:{json:{ok:true}});
+  });
+  await page.goto(`${base}/#invite=${'a'.repeat(24)}`);
+  await page.waitForFunction(()=>document.querySelector('#guest-name').textContent==='Invitado de prueba');
+  await page.locator('[name=attendance][value=yes]').check();
+  if(seats===2)await page.locator('[name=companion-1]').fill('Acompañante Apellido');
+  await page.locator('#submit-rsvp').click();
+  await page.waitForFunction(()=>document.querySelector('#submit-rsvp').disabled);
+  assert.equal(await page.locator('#rsvp-thanks-dialog').isVisible(),false);
+  while(!release)await page.waitForTimeout(10);
+  release();delay=false;
+  await page.locator('#rsvp-thanks-dialog').waitFor({state:'visible'});
+  assert.match(await page.locator('#rsvp-thanks-message').innerText(),/Tu asistencia ha sido confirmada/);
+  const box=await page.locator('#rsvp-thanks-dialog').boundingBox();assert(box.width<=360&&box.height<300);
+  if(width===390&&seats===1)await page.screenshot({path:'/tmp/rsvp-thanks-popup.png'});
+  if(seats===1)await page.locator('#rsvp-thanks-dialog').waitFor({state:'hidden',timeout:5000});
+  else await page.locator('#rsvp-thanks-continue').click();
+  await page.waitForFunction(()=>document.activeElement.id==='despedida');
+  assert(await page.locator('#despedida').evaluate(e=>e.getBoundingClientRect().top<innerHeight));
+  fail=true;
+  await page.locator('#submit-rsvp').click();
+  await page.waitForFunction(()=>document.querySelector('#form-status').textContent.includes('No se pudo'));
+  assert.equal(await page.locator('#rsvp-thanks-dialog').isVisible(),false);
+  assert.equal(await page.locator('#submit-rsvp').isEnabled(),true);
+  fail=false;
+  await page.locator('[name=attendance][value=no]').check();
+  await page.locator('#submit-rsvp').click();
+  await page.locator('#rsvp-thanks-dialog').waitFor({state:'visible'});
+  assert.doesNotMatch(await page.locator('#rsvp-thanks-message').innerText(),/asistencia ha sido confirmada/);
+  assert.match(await page.locator('#rsvp-thanks-message').innerText(),/no podrás acompañarnos/);
+  await page.keyboard.press('Escape');
+  await page.waitForFunction(()=>document.activeElement.id==='despedida');
+  await page.close();
+ }
+ const page=await browser.newPage({reducedMotion:'reduce'});await page.goto(base);
+ await page.locator('[name=attendance][value=no]').check();await page.locator('#submit-rsvp').click();
+ assert.match(await page.locator('#form-status').innerText(),/No se guardó/);
+ assert.equal(await page.locator('#rsvp-thanks-dialog').isVisible(),false);
+ await browser.close();console.log('Agradecimiento: guardado previo, tamaño, avance automático/manual, rechazo, error y demo verificados.');
+})().catch(e=>{console.error(e);process.exit(1)});
