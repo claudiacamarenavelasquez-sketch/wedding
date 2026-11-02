@@ -81,25 +81,7 @@ function backend(){
      await page.locator(`[data-copy="${id}"]`).click();assert.equal(await page.evaluate(()=>window.lastCopied),number);
     }
     assert.equal(await page.locator('#gift-list').getAttribute('href'),'https://sinenvolturas.com/claudiacamarenajorgehiga/regalos');
-    await page.locator('#open-gift-report').click();
-    assert.equal(await page.locator('#gift-payer').inputValue(),guest.name);
-    const currency=guest.seats===1?'USD':'PEN',operation=guest.seats===1?'000111':'000222';
-    const message=guest.seats===1?'':'Con cariño, invitados de prueba';
-    await page.locator('#gift-currency').selectOption(currency);
-    await page.locator('#gift-operation').fill(operation);
-    await page.locator('#gift-message').fill(message);
-    await page.locator('#submit-gift-report').click();
-    await page.waitForFunction(()=>document.querySelector('#gift-report-status').textContent.includes('pendiente'));
-    const gift=service.tables.Obsequios.find(row=>row[0]===guest.id);
-    assert.deepEqual(Array.from(gift.slice(0,7)),[guest.id,guest.name,guest.name,currency,operation,message,'Pendiente']);
-    const giftCount=service.tables.Obsequios.length;
-    await page.locator('#gift-operation').fill(operation);
-    await page.locator('#submit-gift-report').click();
-    await page.waitForFunction(()=>document.querySelector('#gift-operation').value==='');
-    assert.equal(service.tables.Obsequios.length,giftCount);
-    await page.keyboard.press('Escape');
-    assert.equal(await page.locator('#gift-report-dialog').isVisible(),false);
-    assert.equal(await page.evaluate(()=>document.activeElement.id),'open-gift-report');
+    assert.equal(await page.locator('#open-gift-report,#gift-report-dialog').count(),0);
     await page.locator('.rsvp').scrollIntoViewIfNeeded();
     assert.equal(await page.locator('#seat-count').innerText(),String(guest.seats));
     assert.equal(await page.locator('#seat-label').innerText(),guest.seats===1?'Pase':'Pases');
@@ -145,10 +127,10 @@ function backend(){
     assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
     assert.deepEqual(errors,[]);
     assert.equal(JSON.stringify(service.tables.Invitados),initialGuests);
-    console.log(`PASS ${guest.seats} pase(s), ${width}px: video, historia, programa, cuentas, abono, mensaje, RSVP, recarga, cambios y errores.`);
+    console.log(`PASS ${guest.seats} pase(s), ${width}px: video, historia, programa, cuentas, regalos, RSVP, recarga, cambios y errores.`);
     await page.close();
    }
-   assert.equal(service.tables.RSVP.length,3);assert.equal(service.tables.Obsequios.length,3);
+   assert.equal(service.tables.RSVP.length,3);assert.equal(service.tables.Obsequios,undefined);
   }
  }finally{
   global.fetch=originalFetch;

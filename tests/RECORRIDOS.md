@@ -18,8 +18,7 @@ Cuatro recorridos completos: un pase y dos pases, a 390 y 1440 px.
 - Fotografía, dos tiempos de texto, capilla, cronograma, paletas y cierre con monograma.
 - Destino de los enlaces de ubicación y lista de regalos. No se navega ni se verifica el contenido de servicios externos.
 - Copia exacta de las dos cuentas y ambos CCI, conservando ceros iniciales.
-- Pop-up: nombre del titular, soles/dólares, operación y mensaje opcional; registro Pendiente en Obsequios.
-- Reenvío de una operación sin duplicarla; cierre con Escape y restitución del foco.
+- Regalos: ambas cuentas, CCI y enlace de lista de regalos; sin botón ni pop-up de registro de abonos.
 - Un pase sin campos de acompañantes; dos pases con nombre obligatorio del acompañante.
 - Confirmación, recarga y recuperación de la respuesta; dos pases reducidos a uno; cambio a no asistir y nueva recarga.
 - Fallo temporal al enviar sin mostrar un éxito falso, seguido de un reintento correcto.
