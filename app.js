@@ -116,7 +116,7 @@ document.querySelectorAll('[data-copy]').forEach(button => {
     const status = $('bank-copy-status');
     try {
       await navigator.clipboard.writeText(source.textContent.trim());
-      status.textContent = button.dataset.copy === 'bank-cci' ? 'CCI copiado.' : 'Número de cuenta copiado.';
+      status.textContent = button.dataset.copy.endsWith('cci') ? 'CCI copiado.' : 'Número de cuenta copiado.';
     } catch {
       const selection = window.getSelection();
       const range = document.createRange();
@@ -127,3 +127,38 @@ document.querySelectorAll('[data-copy]').forEach(button => {
     }
   });
 });
+
+// El registro de abonos vive únicamente en un diálogo, separado del RSVP.
+const giftDialog = $('gift-report-dialog');
+$('open-gift-report').onclick = () => {
+  if (!$('gift-payer').value && !demo && invitation) $('gift-payer').value = invitation.name;
+  giftDialog.showModal();
+};
+$('close-gift-report').onclick = () => giftDialog.close();
+giftDialog.addEventListener('click', event => {
+  if (event.target !== giftDialog) return;
+  const rect = giftDialog.getBoundingClientRect();
+  if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) giftDialog.close();
+});
+$('gift-report-form').onsubmit = async event => {
+  event.preventDefault();
+  const status = $('gift-report-status');
+  if (demo || !token || !invitation) {
+    status.textContent = 'Abre tu enlace personal de invitación para registrar el abono. No se ha enviado ningún dato.';
+    return;
+  }
+  const data = { payer: $('gift-payer').value.trim(), currency: $('gift-currency').value, operation: $('gift-operation').value.trim(), message: $('gift-message').value.trim() };
+  if (!data.payer || !/^[A-Za-z0-9][A-Za-z0-9 ._-]{2,79}$/.test(data.operation)) {
+    status.textContent = 'Completa tu nombre y un número de operación válido.';
+    return;
+  }
+  $('submit-gift-report').disabled = true;
+  status.textContent = 'Registrando…';
+  try {
+    await api('POST', data);
+    status.textContent = 'Gracias. Registramos tu abono y está pendiente de verificación.';
+    $('gift-operation').value = '';
+    $('gift-message').value = '';
+  } catch (error) { status.textContent = error.message; }
+  finally { $('submit-gift-report').disabled = false; }
+};

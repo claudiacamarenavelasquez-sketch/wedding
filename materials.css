@@ -395,3 +395,26 @@ footer .footer-cypresses{width:clamp(190px,26vw,350px);height:78%;right:-45px;bo
 .footer-monogram{display:flex;justify-content:center;align-items:center;margin:30px auto;width:130px;height:145px}
 .footer-monogram img{display:block;width:100%;height:100%;object-fit:contain}
 @media(min-width:900px){.footer-monogram{width:180px;height:200px;margin:35px auto}}
+
+/* Cuenta adicional y diálogo con la papelería existente. */
+.gift-bank .gift-dollar-title{margin-top:28px}
+.gift-report-trigger{font-family:var(--font-editorial);font-size:14px;color:var(--wine);background:transparent;border:1px solid #a77b6c80;border-radius:24px;padding:10px 22px;margin:0 auto 8px}
+#gift-report-dialog{width:calc(100% - 28px);max-width:510px;max-height:90dvh;padding:0;border:0;background:var(--ivory);color:var(--wine);box-shadow:0 20px 70px #16030666;overflow:auto}
+#gift-report-dialog::backdrop{background:#21080ec4}
+.gift-report-paper{position:relative;padding:48px 35px 45px 48px;background:#f4ede3 url('assets/papel-encaje-fino.webp') center/100% 100% no-repeat}
+.gift-report-close{position:absolute;top:14px;right:18px;border:0;background:transparent;color:var(--wine);font-size:26px;line-height:1;padding:5px}
+#gift-report-title{font-size:28px;line-height:1.2;text-align:center;margin:0 0 15px}
+.gift-report-intro{font-size:17px;line-height:1.4;text-align:center;margin-bottom:24px}
+#gift-report-form label{display:block;font-size:16px;margin:16px 0 5px}
+#gift-report-form input,#gift-report-form select{display:block;width:100%;min-width:0;border:0;border-bottom:1px solid #b7aca8;border-radius:0;padding:9px 0;background:transparent;color:var(--wine);font-size:17px}
+.gift-report-note,#gift-report-status{font-size:14px;line-height:1.45;margin:18px 0}
+#submit-gift-report{width:100%;border-radius:24px;font-size:13px;padding:12px 18px}
+#gift-report-status:empty{display:none}
+@media(min-width:900px){.gift-report-trigger{font-size:18px}}
+
+#gift-report-form textarea{display:block;width:100%;min-height:85px;resize:vertical;border:1px solid #b7aca880;border-radius:5px;padding:9px;background:#fffaf333;color:var(--wine);font-family:var(--font-editorial);font-size:17px;line-height:1.4}
+html:has(#gift-report-dialog[open]){overflow:hidden}
+#gift-report-title{text-transform:none;font-size:25px}
+#gift-report-dialog .gift-report-close{z-index:2;top:12px;right:12px;display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:#f4ede3e6;color:var(--wine);padding:0;font-size:23px;letter-spacing:0}
+#submit-gift-report{background:var(--wine);color:var(--ivory);border-color:var(--wine)}
+@media(max-width:650px){.gift-report-paper{padding-top:45px;padding-bottom:40px}.gift-report-intro{font-size:15px;margin-bottom:18px}#gift-report-form label{font-size:14px;margin-top:12px}#gift-report-form input,#gift-report-form select,#gift-report-form textarea{font-size:16px}#gift-report-form textarea{min-height:65px}.gift-report-note,#gift-report-status{font-size:12px;margin:14px 0}}

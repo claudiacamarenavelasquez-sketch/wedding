@@ -78,3 +78,15 @@ Actualiza Code.gs con la versión 3. Guarda, ejecuta `prepararRSVP` y luego sele
 4. La columna **Enlace** tendrá el formato `https://claudiayjorge.vercel.app/i/` seguido de 24 caracteres. Los enlaces largos ya enviados siguen funcionando, y se conservan los pases y respuestas.
 
 `generarEnlacesFaltantes` crea enlaces cortos para nuevas filas. No ejecutes `generarEnlaceSeleccionado` para acortar: esa función renueva y revoca el enlace anterior. La función de acortar es segura de repetir; no modifica nombres ni cupos. La correspondencia de enlaces antiguos se guarda en las propiedades del mismo proyecto de Apps Script; consérvalas.
+
+## Registro de obsequios (abonos)
+
+Actualiza todo `Code.gs` en el mismo proyecto y publica **una nueva versión de la implementación existente**. Conserva las propiedades del script, la API key y la URL `/exec`. No regeneres enlaces ni crees otra base.
+
+El botón **Ya hice mi abono** abre un diálogo independiente de la tarjeta. El enlace privado identifica al invitado; puede indicar el nombre del abonante, la cuenta de destino (PEN/USD), el número de operación y un mensaje opcional. El enlace general de demostración no envía registros.
+
+La pestaña **Obsequios** se crea automáticamente al guardar el primer registro. Columnas: `InvitacionID`, `Invitado`, `Nombre del abonante`, `Moneda`, `Numero de operacion`, `Mensaje`, `Estado`, `Registrado`. El estado inicial es **Pendiente**; comparar con los movimientos del BCP y cambiarlo manualmente a **Verificado**. No se consulta al banco ni se afirma que el dinero haya ingresado. Un reenvío de la misma operación y moneda no duplica el registro ni modifica una verificación existente.
+
+Las cuentas BCP mostradas en la tarjeta son:
+- Soles: 19329724584030; CCI 00219312972458403012.
+- Dólares: 19114592696195; CCI 00219111459269619556.

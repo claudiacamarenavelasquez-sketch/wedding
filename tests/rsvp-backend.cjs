@@ -8,8 +8,8 @@ function setup() {
  const token = 'a'.repeat(64), key = 'test-only-key-'.repeat(4);
  const tables = {Invitados:[['ID','Titular','Cupos','TokenHash','Enlace'],['one','Familia Uno',2,digest(token),''],['two','Familia Dos',4,digest('b'.repeat(64)),'']],RSVP:[['ID','Asiste','Cantidad','Nombres','Mensaje','Actualizado']]};
  let released=0;
- function sheet(name){return {getName:()=>name,getLastRow:()=>tables[name].length,getRange:(row,col,n=1,m=1)=>({getValues:()=>Array.from({length:n},(_,i)=>Array.from({length:m},(_,j)=>tables[name][row-1+i]?.[col-1+j]??'')),setValues:values=>{values.forEach((r,i)=>{tables[name][row-1+i]??=[];r.forEach((v,j)=>tables[name][row-1+i][col-1+j]=v)});}})}}
- const ctx = vm.createContext({Utilities:{DigestAlgorithm:{SHA_256:1},Charset:{UTF_8:1},computeDigest:(_,s)=>[...crypto.createHash('sha256').update(s).digest()]},PropertiesService:{getScriptProperties:()=>({getProperty:n=>n==='API_KEY'?key:null})},LockService:{getScriptLock:()=>({tryLock:()=>true,releaseLock:()=>released++})},SpreadsheetApp:{openById:()=>({getSheetByName:sheet}),flush:()=>{}},ContentService:{MimeType:{JSON:'json'},createTextOutput:body=>({setMimeType:()=>JSON.parse(body)})}});
+ function sheet(name){return {getName:()=>name,setFrozenRows(){},getLastRow:()=>tables[name].length,getRange:(row,col,n=1,m=1)=>({setNumberFormat:()=>{},getValues:()=>Array.from({length:n},(_,i)=>Array.from({length:m},(_,j)=>tables[name][row-1+i]?.[col-1+j]??'')),setValues:values=>{values.forEach((r,i)=>{tables[name][row-1+i]??=[];r.forEach((v,j)=>tables[name][row-1+i][col-1+j]=v)});}})}}
+ const ctx = vm.createContext({Utilities:{DigestAlgorithm:{SHA_256:1},Charset:{UTF_8:1},computeDigest:(_,s)=>[...crypto.createHash('sha256').update(s).digest()]},PropertiesService:{getScriptProperties:()=>({getProperty:n=>n==='API_KEY'?key:null})},LockService:{getScriptLock:()=>({tryLock:()=>true,releaseLock:()=>released++})},SpreadsheetApp:{openById:()=>({getSheetByName:n=>tables[n]?sheet(n):null,insertSheet:n=>{tables[n]=[];return sheet(n)}}),flush:()=>{}},ContentService:{MimeType:{JSON:'json'},createTextOutput:body=>({setMimeType:()=>JSON.parse(body)})}});
  vm.runInContext(fs.readFileSync('integrations/google-sheets/Code.gs','utf8'),ctx);
  return {tables,ctx,call:(data)=>ctx.doPost({postData:{contents:JSON.stringify({apiKey:key,token,...data})}}),released:()=>released};
 }
@@ -74,5 +74,37 @@ test('Vercel proxy accepts 24-character tokens and rejects malformed short token
   global.fetch=async(_,opts)=>{assert.equal(JSON.parse(opts.body).token,'a'.repeat(24));return{ok:true,json:async()=>({ok:true,invitation:{name:'Invitado Apellido',seats:2}})}};
   assert.equal((await run('a'.repeat(24))).code,200);
   for(const token of ['a'.repeat(12),'a'.repeat(23),'a'.repeat(25),'x'.repeat(24)])assert.equal((await run(token)).code,401);
+ }finally{global.fetch=oldFetch;if(oldKey===undefined)delete process.env.RSVP_API_KEY;else process.env.RSVP_API_KEY=oldKey}
+});
+
+test('gift declarations create Obsequios with pending status, exact operation and safe optional message',()=>{
+ const s=setup();const response={payer:'Otro nombre Apellido',currency:'USD',operation:'00123456',message:'=FORMULA()'};
+ assert(s.call({action:'gift',response}).ok);
+ assert.equal(s.tables.Obsequios.length,2);
+ assert.deepEqual(Array.from(s.tables.Obsequios[1].slice(0,7)),['one','Familia Uno','Otro nombre Apellido','USD','00123456',"'=FORMULA()",'Pendiente']);
+ assert.equal(s.tables.RSVP.length,1);
+ assert(s.call({action:'gift',response}).ok);assert.equal(s.tables.Obsequios.length,2);
+ assert(s.call({action:'gift',response:{payer:'Uno',currency:'PEN',operation:'00123456'}}).ok);
+ assert.equal(s.tables.Obsequios[2][5],'');
+ s.tables.Obsequios[1][6]='Verificado';
+ assert(s.call({action:'gift',response}).ok);assert.equal(s.tables.Obsequios[1][6],'Verificado');
+});
+test('gift declarations reject invalid data, forged state and invalid invitations without writing',()=>{
+ const base={payer:'Uno',currency:'PEN',operation:'12345',message:''};
+ for(const response of [{...base,payer:''},{...base,currency:'EUR'},{...base,operation:'=SUM(A1)'},{...base,operation:'1'},{...base,message:'a'.repeat(2001)},{...base,status:'Verificado'}]){
+  const s=setup();assert.equal(s.call({action:'gift',response}).error,'INVALID_RESPONSE');assert.equal(s.tables.Obsequios,undefined);
+ }
+ const s=setup();assert.equal(s.call({action:'gift',token:'c'.repeat(24),response:base}).error,'INVALID_INVITATION');assert.equal(s.tables.Obsequios,undefined);
+});
+test('same currency and operation cannot be assigned to two invitations',()=>{
+ const s=setup(),response={payer:'Uno',currency:'PEN',operation:'12345'};
+ assert(s.call({action:'gift',response}).ok);
+ assert.equal(s.call({action:'gift',token:'b'.repeat(64),response:{...response,payer:'Dos'}}).error,'INVALID_RESPONSE');
+ assert.equal(s.tables.Obsequios.length,2);
+});
+test('proxy forwards gift POST separately from attendance',async()=>{
+ const handler=require('../api/invitation.js'),oldFetch=global.fetch,oldKey=process.env.RSVP_API_KEY;process.env.RSVP_API_KEY='test-only-key-'.repeat(4);
+ try{global.fetch=async(_,opts)=>{const sent=JSON.parse(opts.body);assert.equal(sent.action,'gift');assert.equal(sent.response.currency,'USD');return{ok:true,json:async()=>({ok:true})}};
+ let status;await handler({method:'POST',headers:{authorization:'Bearer '+'a'.repeat(24)},body:{payer:'Uno',currency:'USD',operation:'12345',message:'Gracias'}},{setHeader(){},status(n){status=n;return this},json(){return this}});assert.equal(status,200);
  }finally{global.fetch=oldFetch;if(oldKey===undefined)delete process.env.RSVP_API_KEY;else process.env.RSVP_API_KEY=oldKey}
 });

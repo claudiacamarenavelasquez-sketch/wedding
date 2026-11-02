@@ -271,7 +271,7 @@ function doPost(event) {
     const key = PropertiesService.getScriptProperties().getProperty('API_KEY');
     if (!key || key.length < 32) return failure_('NOT_CONFIGURED');
     if (!request || typeof request !== 'object' || Array.isArray(request) || !same_(request.apiKey, key)) return failure_('UNAUTHORIZED');
-    if (!['lookup', 'save'].includes(request.action) || !/^(?:[a-f0-9]{24}|[a-f0-9]{64})$/.test(request.token || '')) return failure_('INVALID_REQUEST');
+    if (!['lookup', 'save', 'gift'].includes(request.action) || !/^(?:[a-f0-9]{24}|[a-f0-9]{64})$/.test(request.token || '')) return failure_('INVALID_REQUEST');
     if (Object.keys(request).some(k => !['apiKey', 'action', 'token', 'response'].includes(k))) return failure_('INVALID_REQUEST');
     locked = lock.tryLock(20000);
     if (!locked) return failure_('BUSY');
@@ -289,6 +289,7 @@ function doPost(event) {
     const id = String(guest[0]);
     const seats = guest[2]; // Única fuente de verdad: la hoja, nunca el navegador.
     if (!id || !String(guest[1]).trim() || !Number.isInteger(seats) || seats < 1 || seats > 100 || rows.filter(row => String(row[0]) === id).length !== 1) return failure_('INVALID_INVITATION');
+    if (request.action === 'gift') return recordGift_(book, id, String(guest[1]), request.response);
     const guestRow = rows.indexOf(guest) + 2;
     const current = layout.existing ? guests.getRange(guestRow, 7, 1, 4).getValues()[0] : null;
     const saved = layout.existing ? (current[0] === '' ? [] : [[id, current[0], current[1], current[2], '', current[3]]]) : (responses.getLastRow() > 1 ? responses.getRange(2, 1, responses.getLastRow() - 1, RESPONSE_HEADERS.length).getValues() : []);
@@ -314,6 +315,25 @@ function doPost(event) {
     // No registrar tokens, claves, nombres ni mensajes en logs.
     return failure_('SERVICE_ERROR');
   } finally { if (locked) lock.releaseLock(); }
+}
+
+// Declaraciones del invitado: requieren cotejo manual con el banco.
+function recordGift_(book, id, guestName, value) {
+  if (!value || typeof value !== 'object' || Array.isArray(value) || Object.keys(value).some(k => !['payer', 'currency', 'operation', 'message'].includes(k))) return failure_('INVALID_RESPONSE');
+  if (typeof value.payer !== 'string' || !value.payer.trim() || value.payer.trim().length > 120 || !['PEN','USD'].includes(value.currency) || typeof value.operation !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9 ._-]{2,79}$/.test(value.operation.trim())) return failure_('INVALID_RESPONSE');
+  if (value.message !== undefined && (typeof value.message !== 'string' || value.message.length > 2000)) return failure_('INVALID_RESPONSE');
+  const headers = ['InvitacionID', 'Invitado', 'Nombre del abonante', 'Moneda', 'Numero de operacion', 'Mensaje', 'Estado', 'Registrado'];
+  const sheet = ensureSheet_(book, 'Obsequios', headers);
+  const operation = value.operation.trim();
+  const rows = sheet.getLastRow() > 1 ? sheet.getRange(2, 1, sheet.getLastRow() - 1, headers.length).getValues() : [];
+  const previous = rows.find(row => row[3] === value.currency && String(row[4]) === operation);
+  if (previous) return String(previous[0]) === id ? json_({ ok: true }) : failure_('INVALID_RESPONSE');
+  const row = [id, text_(guestName), text_(value.payer.trim()), value.currency, operation, text_((value.message || '').trim()), 'Pendiente', new Date()];
+  // Formato texto para conservar ceros iniciales del número de operación.
+  sheet.getRange(sheet.getLastRow() + 1, 5).setNumberFormat('@');
+  sheet.getRange(sheet.getLastRow() + 1, 1, 1, headers.length).setValues([row]);
+  SpreadsheetApp.flush();
+  return json_({ ok: true });
 }
 
 function validateResponse_(value, seats) {

@@ -1,8 +1,8 @@
 // Vercel server function. Never send RSVP_API_KEY to the browser.
 module.exports = async function handler(req, res) {
   res.setHeader('Cache-Control', 'private, no-store');
-  if (!['GET', 'PUT'].includes(req.method)) {
-    res.setHeader('Allow', 'GET, PUT');
+  if (!['GET', 'PUT', 'POST'].includes(req.method)) {
+    res.setHeader('Allow', 'GET, PUT, POST');
     return res.status(405).json({ error: 'METHOD_NOT_ALLOWED' });
   }
   const token = /^Bearer ([a-f0-9]{24}|[a-f0-9]{64})$/.exec(req.headers.authorization || '')?.[1];
@@ -13,7 +13,7 @@ module.exports = async function handler(req, res) {
     return res.status(503).json({ error: 'NOT_CONFIGURED' });
   }
   let response;
-  if (req.method === 'PUT') {
+  if (req.method === 'PUT' || req.method === 'POST') {
     try {
       response = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
       if (!response || Buffer.byteLength(JSON.stringify(response)) > 16000) throw new Error();
@@ -22,7 +22,7 @@ module.exports = async function handler(req, res) {
   try {
     const upstream = await fetch(endpoint, {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ apiKey: key, token, action: req.method === 'GET' ? 'lookup' : 'save', ...(response ? { response } : {}) }),
+      body: JSON.stringify({ apiKey: key, token, action: req.method === 'GET' ? 'lookup' : req.method === 'POST' ? 'gift' : 'save', ...(response ? { response } : {}) }),
       signal: AbortSignal.timeout(25000), redirect: 'follow'
     });
     if (!upstream.ok) throw new Error();
