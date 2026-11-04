@@ -54,7 +54,7 @@ Copia la URL terminada en `/exec`. Al abrirla devuelve un estado público sin no
 
 El repositorio ya incluye `api/invitation.js`, que conecta el formulario con Apps Script sin revelar la clave. Agrega en **Settings → Environment Variables**:
 
-- `RSVP_SCRIPT_URL`: URL `/exec` de la implementación; opcional si conservas la URL que ya proporcionaste y está configurada por defecto en el backend.
+- La URL de Apps Script está fijada en `api/invitation.js` a la implementación indicada por la pareja; `RSVP_SCRIPT_URL` ya no la sobrescribe.
 - `RSVP_API_KEY`: exactamente la misma clave privada del paso 2.
 
 Vuelve a desplegar después de configurar las variables. Estas son variables del servidor; no uses prefijos públicos. El código Apps Script devuelve errores en JSON; Vercel los convierte en errores HTTP. No usar `no-cors`, porque impediría comprobar los guardados.
@@ -92,4 +92,18 @@ Las cuentas BCP mostradas en la tarjeta son:
 - Dólares: 19114592696195; CCI 00219111459269619556.
 
 
-Implementación actual indicada por la pareja: `https://script.google.com/macros/s/AKfycbxI9qiR24_O1ng66gGS9KZdwCNToXEmLvMevIPPmJPL58Y4ObWG6vx_uS-1hENuZvM/exec`. Si `RSVP_SCRIPT_URL` está configurada en Vercel, actualizarla a esta misma URL y volver a desplegar. La API key debe coincidir con las propiedades del proyecto que sirve esta implementación.
+Implementación actual indicada por la pareja: `https://script.google.com/macros/s/AKfycbxI9qiR24_O1ng66gGS9KZdwCNToXEmLvMevIPPmJPL58Y4ObWG6vx_uS-1hENuZvM/exec`. La web utiliza esta implementación directamente, incluso si quedó una variable `RSVP_SCRIPT_URL` antigua en Vercel. La API key debe coincidir con las propiedades del proyecto que sirve esta implementación.
+
+
+### Diagnóstico de conexión en Vercel
+
+Abrir **Logs**, recargar una invitación privada y filtrar `[RSVP_CONNECTION]`. Estos registros no incluyen claves ni datos de invitados.
+
+- `VERCEL_API_KEY_MISSING`: falta `RSVP_API_KEY` o tiene menos de 32 caracteres en Vercel.
+- `SCRIPT_API_KEY_MISSING`: falta `API_KEY` en las propiedades del proyecto de Apps Script.
+- `SCRIPT_API_KEY_MISMATCH`: las claves de Vercel y Apps Script no coinciden.
+- `SCRIPT_HTTP_401`, `SCRIPT_HTTP_403` o `SCRIPT_RESPONSE_NOT_JSON`: revisar que la implementación sea pública para Cualquier usuario y ejecute como propietario.
+- `SCRIPT_SHEETS_ERROR`: revisar las ejecuciones de Apps Script, el acceso a la hoja, los encabezados y `RSVP_SPREADSHEET_ID`.
+- `SCRIPT_TIMEOUT` o `SCRIPT_NETWORK_ERROR`: fallo temporal al comunicarse con Google.
+
+Vercel tiene 30 segundos asignados a la función; la llamada a Google espera un máximo de 25 segundos.

@@ -27,5 +27,10 @@
       "source": "/i/:token",
       "destination": "/index.html"
     }
-  ]
+  ],
+  "functions": {
+    "api/invitation.js": {
+      "maxDuration": 30
+    }
+  }
 }

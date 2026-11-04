@@ -79,7 +79,7 @@ La solicitud de lectura está bloqueada por el proxy de red (403 CONNECT); todav
 
 ## Integración Apps Script preparada
 
-El código instalable está en `integrations/google-sheets/Code.gs`; instrucciones completas en `integrations/google-sheets/INSTALAR.md`. `api/invitation.js` implementa el puente privado de Vercel. Configurar `RSVP_SCRIPT_URL` y `RSVP_API_KEY` en Vercel y `API_KEY`/`WEDDING_URL` en Apps Script. Estas piezas aún no están instaladas ni verificadas contra la hoja real; el frontend permanece en demo. Las seis pruebas de `node --test tests/rsvp-backend.cjs` verifican el contrato con dobles de Google Sheets y del servicio HTTP, no una escritura en producción.
+El código instalable está en `integrations/google-sheets/Code.gs`; instrucciones completas en `integrations/google-sheets/INSTALAR.md`. `api/invitation.js` implementa el puente privado de Vercel. Configurar `RSVP_API_KEY` en Vercel y `API_KEY`/`WEDDING_URL` en Apps Script. Estas piezas aún no están instaladas ni verificadas contra la hoja real; el frontend permanece en demo. Las seis pruebas de `node --test tests/rsvp-backend.cjs` verifican el contrato con dobles de Google Sheets y del servicio HTTP, no una escritura en producción.
 
 El bloque de fecha, programa y ubicación tiene espaciado compacto. El video principal usa object-fit: contain para mostrar todas las escenas sin recortes. Una segunda capa sincronizada con desenfoque rellena el viewport vertical. Tocar la imagen o activar su control accesible avanza a la portada. El archivo original permanece intacto.
 
@@ -89,7 +89,7 @@ Se sustituyó el fondo de papel por una versión con encaje mucho más estrecho 
 
 ## Estado de conexión actual
 
-El endpoint Apps Script respondió `{ok:true, service:"wedding-rsvp", version:1}` en una comprobación pública. No se ha confirmado una escritura real ni se han inspeccionado las variables de Vercel. El modo auto conecta enlaces privados a /api/invitation. La URL del script proporcionado ya es el valor predeterminado del servidor; RSVP_SCRIPT_URL permite cambiarla. RSVP_API_KEY debe configurarse en Vercel con la misma API_KEY privada de Apps Script. El enlace general permanece como demostración explícita.
+El endpoint Apps Script respondió `{ok:true, service:"wedding-rsvp", version:1}` en una comprobación pública. No se ha confirmado una escritura real ni se han inspeccionado las variables de Vercel. El modo auto conecta enlaces privados a /api/invitation. La URL del script proporcionado ya es el valor predeterminado del servidor; La URL de Apps Script está fijada en `api/invitation.js`; una variable RSVP_SCRIPT_URL anterior no la sobrescribe. RSVP_API_KEY debe configurarse en Vercel con la misma API_KEY privada de Apps Script. El enlace general permanece como demostración explícita.
 
 ## Adaptación a la lista existente
 
