@@ -431,3 +431,5 @@ html:has(#rsvp-thanks-dialog[open]){overflow:hidden}
 /* Tamaños solicitados para las cuentas en soles y dólares. */
 .gifts .gift-bank .gift-bank-title{font-size:14px}
 .gifts .gift-bank dl dt,.gifts .gift-bank dl dd,.gifts .gift-bank dl dd>span{font-size:12px}
+
+.rsvp #retry-rsvp{border-radius:24px;font-family:var(--font-editorial);font-size:14px;padding:10px 18px;margin:12px 0;background:var(--wine);color:var(--ivory)}

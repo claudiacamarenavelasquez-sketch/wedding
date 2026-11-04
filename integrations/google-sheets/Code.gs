@@ -225,7 +225,7 @@ function generarEnlacesFaltantes() {
 }
 
 // Comprobación pública sin datos de invitados.
-function doGet() { return json_({ ok: true, service: 'wedding-rsvp', version: 4 }); }
+function doGet() { return json_({ ok: true, service: 'wedding-rsvp', version: 5 }); }
 
 /** Convierte los enlaces largos sin invalidar los ya enviados ni modificar respuestas.
  * Ejecutar después de actualizar la implementación web del mismo proyecto.
@@ -273,8 +273,12 @@ function doPost(event) {
     if (!request || typeof request !== 'object' || Array.isArray(request) || !same_(request.apiKey, key)) return failure_('UNAUTHORIZED');
     if (!['lookup', 'save', 'gift'].includes(request.action) || !/^(?:[a-f0-9]{24}|[a-f0-9]{64})$/.test(request.token || '')) return failure_('INVALID_REQUEST');
     if (Object.keys(request).some(k => !['apiKey', 'action', 'token', 'response'].includes(k))) return failure_('INVALID_REQUEST');
-    locked = lock.tryLock(20000);
-    if (!locked) return failure_('BUSY');
+    // Leer una invitación no debe esperar detrás de otras lecturas o envíos.
+    // Conservar el bloqueo para todas las escrituras y su comprobación de duplicados.
+    if (request.action !== 'lookup') {
+      locked = lock.tryLock(5000);
+      if (!locked) return failure_('BUSY');
+    }
     const book = rsvpBook_();
     const layout = guestLayout_(book, false);
     const guests = layout.sheet;

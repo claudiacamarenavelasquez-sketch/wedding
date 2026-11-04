@@ -84,7 +84,32 @@ let invitation;
 // Aceptar los enlaces cortos y conservar los enlaces privados anteriores.
 const token = /^\/i\/([a-f0-9]{24}|[a-f0-9]{64})\/?$/.exec(location.pathname)?.[1] || new URLSearchParams(location.hash.slice(1)).get('invite');
 const demo = wedding.rsvp.mode === 'demo' || (wedding.rsvp.mode === 'auto' && !token);
-async function api(method, data) { const response = await fetch(wedding.rsvp.endpoint, { method, headers: { Authorization: `Bearer ${token}`, ...(data ? {'Content-Type':'application/json'} : {}) }, ...(data ? { body: JSON.stringify(data) } : {}), cache: 'no-store', credentials: 'same-origin', referrerPolicy: 'no-referrer' }); if (!response.ok) throw new Error(response.status === 401 || response.status === 404 ? 'No pudimos validar tu invitación. Contacta a los novios.' : 'No se pudo completar la solicitud. Inténtalo nuevamente.'); return response.json(); }
+async function api(method, data) {
+  const message = 'No se pudo completar la solicitud. Inténtalo nuevamente.';
+  for (let attempt = 0; attempt < 2; attempt++) {
+    let response;
+    try {
+      response = await fetch(wedding.rsvp.endpoint, {
+        method, headers: { Authorization: `Bearer ${token}`, ...(data ? { 'Content-Type': 'application/json' } : {}) },
+        ...(data ? { body: JSON.stringify(data) } : {}), cache: 'no-store', credentials: 'same-origin', referrerPolicy: 'no-referrer',
+        signal: typeof AbortSignal !== 'undefined' && typeof AbortSignal.timeout === 'function' ? AbortSignal.timeout(32000) : undefined
+      });
+    } catch {
+      // Reintentar solo lecturas: nunca enviar una confirmación dos veces automáticamente.
+      if (method === 'GET' && attempt === 0) { await new Promise(resolve => setTimeout(resolve, 1200)); continue; }
+      throw new Error(message);
+    }
+    if (response.ok) {
+      try { return await response.json(); } catch { throw new Error(message); }
+    }
+    const retryAfter = response.headers.get('Retry-After');
+    if (method === 'GET' && attempt === 0 && ([502, 504].includes(response.status) || (response.status === 503 && retryAfter))) {
+      await new Promise(resolve => setTimeout(resolve, Math.min(3000, Math.max(500, (Number(retryAfter) || 1) * 1000))));
+      continue;
+    }
+    throw new Error(response.status === 401 || response.status === 404 ? 'No pudimos validar tu invitación. Contacta a los novios.' : message);
+  }
+}
 function renderNames(values = []) {
   const count = Number($('quantity').value);
   $('names').replaceChildren();
@@ -105,7 +130,7 @@ function renderNames(values = []) {
 function syncAttendance() { const yes = document.querySelector('[name=attendance]:checked')?.value === 'yes'; $('attendee-fields').hidden = !yes; $('names').querySelectorAll('input').forEach(input => input.disabled = !yes); }
 $('quantity').onchange = () => { const values = [...$('names').querySelectorAll('input')].map(i => i.value); renderNames(values); syncAttendance(); };
 document.querySelectorAll('[name=attendance]').forEach(input => input.onchange = syncAttendance);
-async function initRSVP() { try { if (!demo && !token) throw new Error('Abre el enlace privado de tu invitación para consultar tus lugares y confirmar.'); invitation = demo ? wedding.rsvp.demo : await api('GET'); if (!Number.isInteger(invitation.seats) || invitation.seats < 1 || invitation.seats > 100 || typeof invitation.name !== 'string') throw new Error('No se pudo validar la información de la invitación.'); $('guest').value = invitation.name; $('guest-name').textContent = invitation.name; $('seat-count').textContent = invitation.seats; $('seat-label').textContent = invitation.seats === 1 ? 'Pase' : 'Pases'; for (let n=1;n<=invitation.seats;n++) $('quantity').add(new Option(String(n),String(n))); $('quantity').value = String(invitation.seats); $('quantity-field').hidden = invitation.seats === 1; renderNames(); if (!demo) {  $('submit-rsvp').textContent = 'Enviar Confirmación'; const saved = invitation.response; if (saved) { const radio = document.querySelector(`[name=attendance][value="${saved.attending ? 'yes' : 'no'}"]`); radio.checked = true; if (saved.attending && Number.isInteger(saved.count) && saved.count >= 1 && saved.count <= invitation.seats) $('quantity').value = saved.count; renderNames(Array.isArray(saved.names) ? saved.names.slice(1) : []); syncAttendance(); } } } catch(error) { $('seat-count').textContent = '—'; $('guest-name').textContent = 'Invitación privada'; $('rsvp-form').querySelectorAll('input,select,textarea,button').forEach(el => el.disabled = true); $('form-status').textContent = error.message; $('mode-note').hidden = false; $('mode-note').textContent = 'No se han cargado los datos de la invitación.'; } }
+async function initRSVP() { $('retry-rsvp').hidden = true; $('retry-rsvp').disabled = true; try { if (!demo && !token) throw new Error('Abre el enlace privado de tu invitación para consultar tus lugares y confirmar.'); invitation = demo ? wedding.rsvp.demo : await api('GET'); if (!Number.isInteger(invitation.seats) || invitation.seats < 1 || invitation.seats > 100 || typeof invitation.name !== 'string') throw new Error('No se pudo validar la información de la invitación.'); $('rsvp-form').querySelectorAll('input,select,textarea,button').forEach(el => el.disabled = false); $('form-status').textContent = ''; $('mode-note').hidden = true; $('quantity').replaceChildren(); $('guest').value = invitation.name; $('guest-name').textContent = invitation.name; $('seat-count').textContent = invitation.seats; $('seat-label').textContent = invitation.seats === 1 ? 'Pase' : 'Pases'; for (let n=1;n<=invitation.seats;n++) $('quantity').add(new Option(String(n),String(n))); $('quantity').value = String(invitation.seats); $('quantity-field').hidden = invitation.seats === 1; renderNames(); if (!demo) {  $('submit-rsvp').textContent = 'Enviar Confirmación'; const saved = invitation.response; if (saved) { const radio = document.querySelector(`[name=attendance][value="${saved.attending ? 'yes' : 'no'}"]`); radio.checked = true; if (saved.attending && Number.isInteger(saved.count) && saved.count >= 1 && saved.count <= invitation.seats) $('quantity').value = saved.count; renderNames(Array.isArray(saved.names) ? saved.names.slice(1) : []); syncAttendance(); } } } catch(error) { $('seat-count').textContent = '—'; $('guest-name').textContent = 'Invitación privada'; $('rsvp-form').querySelectorAll('input,select,textarea,button').forEach(el => el.disabled = true); $('form-status').textContent = error.message; $('mode-note').hidden = false; $('mode-note').textContent = 'No se han cargado los datos de la invitación.'; $('retry-rsvp').hidden = false; } finally { $('retry-rsvp').disabled = false; } }
 const rsvpThanks = $('rsvp-thanks-dialog');
 let rsvpThanksTimer;
 function showRSVPThanks(attending) {
@@ -124,6 +149,7 @@ rsvpThanks.addEventListener('close', () => {
   closing.scrollIntoView({ behavior: reducedMotion ? 'instant' : 'smooth', block: 'start' });
 });
 $('rsvp-form').onsubmit = async event => { event.preventDefault(); const attending = document.querySelector('[name=attendance]:checked')?.value === 'yes'; const count = attending ? Number($('quantity').value) : 0; if (!invitation || !Number.isInteger(count) || count < 0 || (attending && count < 1) || count > invitation.seats) { $('form-status').textContent = 'Selecciona una cantidad válida dentro de los lugares asignados.'; return; } const names = attending ? [invitation.name, ...[...$('names').querySelectorAll('input')].map(input => input.value.trim())] : []; if (attending && (names.length !== count || names.some(n => !n))) { $('form-status').textContent = 'Completa los nombres de los asistentes.'; return; } if (demo) { $('form-status').textContent = `Demostración: ${attending ? `${count} asistentes` : 'no asistirás'}. No se guardó ni envió ningún dato.`; return; } $('submit-rsvp').disabled = true; try { await api('PUT', { attending, count, names, message: '' }); $('form-status').textContent = 'Gracias. Tu confirmación se guardó correctamente. Puedes actualizarla desde este enlace.'; showRSVPThanks(attending); } catch(error) { $('form-status').textContent = error.message; } finally { $('submit-rsvp').disabled = false; } };
+$('retry-rsvp').onclick = initRSVP;
 initRSVP();
 
 // Copiar únicamente los dígitos, conservando los ceros iniciales del CCI.

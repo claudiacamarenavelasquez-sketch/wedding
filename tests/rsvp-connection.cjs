@@ -17,6 +17,7 @@ test('diagnoses connection failures without logging keys, tokens or upstream dat
  const key='secret-key-never-log-'.repeat(3),token='a'.repeat(24);let logs=[];
  console.error=(...args)=>logs.push(args.join(' '));
  const cases=[
+  ['SCRIPT_BUSY',async()=>({ok:true,json:async()=>({ok:false,error:'BUSY'})})],
   ['SCRIPT_API_KEY_MISMATCH',async()=>({ok:true,json:async()=>({ok:false,error:'UNAUTHORIZED'})})],
   ['SCRIPT_API_KEY_MISSING',async()=>({ok:true,json:async()=>({ok:false,error:'NOT_CONFIGURED'})})],
   ['SCRIPT_SHEETS_ERROR',async()=>({ok:true,json:async()=>({ok:false,error:'SERVICE_ERROR'})})],

@@ -2,6 +2,7 @@
 // Solo códigos de diagnóstico: nunca claves, tokens, nombres ni respuestas de Google.
 function unavailable(res, reason) {
   console.error('[RSVP_CONNECTION]', reason);
+  if (['SCRIPT_BUSY', 'SCRIPT_TIMEOUT', 'SCRIPT_NETWORK_ERROR', 'SCRIPT_HTTP_429', 'SCRIPT_HTTP_502', 'SCRIPT_HTTP_503', 'SCRIPT_HTTP_504'].includes(reason)) res.setHeader('Retry-After', '2');
   return res.status(503).json({ error: 'SERVICE_UNAVAILABLE' });
 }
 module.exports = async function handler(req, res) {

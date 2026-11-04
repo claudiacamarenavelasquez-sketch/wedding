@@ -108,3 +108,25 @@ test('proxy forwards gift POST separately from attendance',async()=>{
  let status;await handler({method:'POST',headers:{authorization:'Bearer '+'a'.repeat(24)},body:{payer:'Uno',currency:'USD',operation:'12345',message:'Gracias'}},{setHeader(){},status(n){status=n;return this},json(){return this}});assert.equal(status,200);
  }finally{global.fetch=oldFetch;if(oldKey===undefined)delete process.env.RSVP_API_KEY;else process.env.RSVP_API_KEY=oldKey}
 });
+
+test('invitation lookups bypass a busy write lock and never release a lock they do not own',()=>{
+ const s=setup();let attempts=0,released=0;
+ s.ctx.LockService.getScriptLock=()=>({tryLock(){attempts++;return false},releaseLock(){released++}});
+ for(let i=0;i<10;i++)assert.equal(s.call({action:'lookup'}).invitation.name,'Familia Uno');
+ assert.equal(attempts,0);assert.equal(released,0);assert.equal(s.tables.RSVP.length,1);
+});
+test('writes still require the lock and return BUSY promptly without modifying any table',()=>{
+ const s=setup();let attempts=0,released=0;
+ s.ctx.LockService.getScriptLock=()=>({tryLock(ms){assert.equal(ms,5000);attempts++;return false},releaseLock(){released++}});
+ const before=JSON.stringify(s.tables);
+ assert.equal(s.call({action:'save',response:{attending:true,count:1,names:['Uno'],message:''}}).error,'BUSY');
+ assert.equal(s.call({action:'gift',response:{payer:'Uno',currency:'PEN',operation:'00123'}}).error,'BUSY');
+ assert.equal(attempts,2);assert.equal(released,0);assert.equal(JSON.stringify(s.tables),before);
+});
+test('successful saves hold the write lock through sheet access and release it afterwards',()=>{
+ const s=setup();let held=false,released=false;
+ s.ctx.LockService.getScriptLock=()=>({tryLock(){held=true;return true},releaseLock(){held=false;released=true}});
+ const open=s.ctx.SpreadsheetApp.openById;s.ctx.SpreadsheetApp.openById=(id)=>{assert(held);return open(id)};
+ assert(s.call({action:'save',response:{attending:true,count:1,names:['Uno'],message:''}}).ok);
+ assert.equal(held,false);assert.equal(released,true);
+});

@@ -107,3 +107,12 @@ Abrir **Logs**, recargar una invitación privada y filtrar `[RSVP_CONNECTION]`. 
 - `SCRIPT_TIMEOUT` o `SCRIPT_NETWORK_ERROR`: fallo temporal al comunicarse con Google.
 
 Vercel tiene 30 segundos asignados a la función; la llamada a Google espera un máximo de 25 segundos.
+
+
+### Versión 5: resolver SCRIPT_BUSY y esperas al abrir invitaciones
+
+La versión 5 de `Code.gs` no adquiere el bloqueo global para `lookup`. Las lecturas ya no hacen cola detrás de otras consultas, confirmaciones o generación de enlaces. Las escrituras siguen bajo bloqueo, con espera máxima de 5 segundos y comprobación de duplicados dentro de la sección protegida.
+
+Actualizar el código **en el mismo proyecto** y elegir **Implementar → Administrar implementaciones → Editar → Nueva versión → Implementar**. Conservar la URL `/exec`, `API_KEY`, `RSVP_SPREADSHEET_ID` y las propiedades `SHORT_...`. No regenerar los enlaces. Al abrir la URL `/exec` debe aparecer `version: 5`.
+
+La web reintenta una vez las consultas ante `Retry-After` por un fallo temporal; nunca reenvía automáticamente una confirmación. Si la carga sigue fallando, muestra **Volver a cargar mi invitación** para recuperarla sin recargar toda la página.
